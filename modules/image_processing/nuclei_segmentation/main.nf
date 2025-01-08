@@ -13,7 +13,7 @@ process nuclei_segmentation {
     script:
     """
     echo "Dataset Path: ${fpath}, Basename: ${basename}"
-    python ${projectDir}/cellular-dynamics-nf-modules/image_processing/scripts/nuclei_segmentation.py \
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/scripts/nuclei_segmentation.py \
         --infile="${fpath}" \
         --outfile="nuclei_segmentation.pickle" \
         --stardist_probility_threshold=${params.stardist_probality_threshold} \

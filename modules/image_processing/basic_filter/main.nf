@@ -13,7 +13,7 @@ process basic_filter {
     script:
     """
     echo "Dataset Path: ${dataset_path}, Basename: ${basename}"
-    python ${projectDir}/cellular-dynamics-nf-modules/image_processing/basic_filter/scripts/filter.py \
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/basic_filter/scripts/filter.py \
         --infile="${dataset_path}" \
         --outfile="confluency_filtered.pickle" \
         --drop_first_n=${params.drop_first_n} \

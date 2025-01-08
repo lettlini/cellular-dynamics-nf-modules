@@ -11,7 +11,7 @@ process cell_approximation {
     script:
     """
     echo "Dataset Path: ${fpath}, Basename: ${basename}"
-    python ${projectDir}/cellular-dynamics-nf-modules/image_processing/cell_approximation/scripts/cell_approximation.py \
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/cell_approximation/scripts/cell_approximation.py \
         --infile="${fpath}" \
         --outfile="cell_approximation.pickle" \
         --cell_cutoff_px=${params.cell_cutoff_px} \

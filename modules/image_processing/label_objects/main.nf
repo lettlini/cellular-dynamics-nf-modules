@@ -12,7 +12,7 @@ process label_objects {
     script:
     """
     echo "Cell File Path: ${fpath}, Basename: ${basename}"
-    python ${projectDir}/cellular-dynamics-nf-modules/image_processing/label_objects/scripts/label_objects.py \
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/label_objects/scripts/label_objects.py \
         --infile=${fpath} \
         --outfile="cells_labelled.pickle" \
         --cpus=${task.cpus}
