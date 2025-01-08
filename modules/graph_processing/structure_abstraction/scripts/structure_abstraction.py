@@ -200,8 +200,6 @@ class IdentifyNeighborsTransformation(BaseMultiDataSetTransformation):
 
 if __name__ == "__main__":
 
-    cv2.setNumThreads(0)
-
     parser = ArgumentParser()
 
     parser.add_argument(
@@ -231,6 +229,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    cv2.setNumThreads(args.cpus)
+
     cells_labelled_ds = BaseDataSet.from_pickle(args.cells_infile)
     nuclei_labelled_ds = BaseDataSet.from_pickle(args.nuclei_infile)
 
@@ -247,6 +247,8 @@ if __name__ == "__main__":
         nuc_prop_ds=nuclei_properties,
         cell_prop_ds=cell_properties,
     )
+
+    cv2.setNumThreads(0)
 
     all_properties_merged_neighbors = IdentifyNeighborsTransformation(
         mum_px=args.mum_per_px

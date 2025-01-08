@@ -4,7 +4,25 @@ import cv2
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
-from nuclei_segmentation import get_disconnected
+
+
+def get_disconnected(timage: np.array) -> np.array:
+    """Disconnects touching regions with different labels (stardist)"""
+
+    dmask = np.zeros_like(timage)
+
+    # get list of labels
+    lls = np.unique(timage)
+    lls = np.setdiff1d(lls, (0,))
+
+    for current_label in lls:
+        current_small_image = (timage == current_label).astype(np.uint8)
+        current_small_image = cv2.erode(
+            current_small_image, cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        )
+        dmask += current_small_image
+
+    return ~(dmask.astype(bool))
 
 
 class CellApproximationTransform(BaseDataSetTransformation):
@@ -14,7 +32,7 @@ class CellApproximationTransform(BaseDataSetTransformation):
         super().__init__()
 
     def _transform_single_entry(
-        self, entry: BaseDataSetEntry, _: dict
+        self, entry: BaseDataSetEntry, dataset_properties: dict
     ) -> BaseDataSetEntry:
         """Function to convert nuclei brightfield microscopy images (grayscale) to cell masks"""
 
