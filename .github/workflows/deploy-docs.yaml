@@ -34,7 +34,9 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip' # caching pip dependencies
-        run: pip install -r docs/requirements.txt
+
+      - name: Install Dependencies
+        run: pip install -r docs/requirements.txt1
 
       - name: Build and deploy
         working-directory: docs  # Set working directory to docs
