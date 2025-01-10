@@ -19,6 +19,9 @@ permissions:
 
 jobs:
   deploy:
+    defaults:
+          run:
+            shell: bash -l {0}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,12 +29,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: setup miniconda
+      - name: create environment with mamba
         uses: conda-incubator/setup-miniconda@v3
         with:
+          mamba-version: "*"
+          channels: conda-forge,defaults
+          auto-activate-base: false
           activate-environment: docs-env
           environment-file: docs/docs-env.yml
-          auto-activate-base: false
 
       - name: Build and deploy
         working-directory: docs  # Set working directory to docs
