@@ -28,10 +28,9 @@ jobs:
 
       - name: setup miniconda
         uses: conda-incubator/setup-miniconda@v3
-        working-directory: docs  # Set working directory to docs
         with:
           activate-environment: docs-env
-          environment-file: docs-env.yml
+          environment-file: docs/docs-env.yml
           auto-activate-base: false
 
       - name: Build and deploy
