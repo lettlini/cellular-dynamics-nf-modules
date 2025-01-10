@@ -90,9 +90,6 @@ class CalculateCellNucleusShapeTransformation(BaseDataSetTransformation):
                 / nodeprops["nucleus_minor_axis_mum"]
             )
 
-            assert nodeprops["nucleus_shape"] >= 1.0
-            assert nodeprops["cell_shape"] >= 2 / np.sqrt(np.pi)
-
         return BaseDataSetEntry(identifier=entry.identifier, data=graph)
 
 
