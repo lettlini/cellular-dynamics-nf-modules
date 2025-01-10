@@ -35,7 +35,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install Dependencies
-        run: pip install -r docs/requirements.txt1
+        run: pip install -r docs/requirements.txt
 
       - name: Build and deploy
         working-directory: docs  # Set working directory to docs
