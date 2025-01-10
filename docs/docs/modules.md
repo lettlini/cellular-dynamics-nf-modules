@@ -67,3 +67,20 @@ include { annotate_D2min } from './cellular-dynamics-nf-modules/modules/tracking
 ### Build Graphs
 ### Annotate Graph Theoretical Observables
 
+### Calculate Local Density
+
+A cell's local density $\rho$ is defined to be the inverse of the mean
+cell area $\bar{A}$ of the cell and its neighbors:
+
+$\rho_i = \frac{1}{\bar{A}} = \frac{1}{\frac{1}{|\mathcal{N_i}| + 1} \left(A_i + \sum_{j \in \mathcal{N_i} }A_j\right)}$
+
+
+```nextflow
+include { calculate_local_density } from './cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/main.nf'
+```
+
+#### Inputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||tuple(val, path)|(`basename`, `fpath`)|
+|4|`parent_dir_out`|val|Directory to which the resulting file will be published.|
