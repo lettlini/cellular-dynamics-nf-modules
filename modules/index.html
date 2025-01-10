@@ -415,6 +415,30 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#calculate-local-density" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calculate Local Density
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Calculate Local Density">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -593,6 +617,30 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#calculate-local-density" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calculate Local Density
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Calculate Local Density">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -733,6 +781,37 @@ strain tensor <span class="arithmatex">\(\pmb{E}\)</span>:</p>
 <h3 id="structure-abstraction">Structure Abstraction</h3>
 <h3 id="build-graphs">Build Graphs</h3>
 <h3 id="annotate-graph-theoretical-observables">Annotate Graph Theoretical Observables</h3>
+<h3 id="calculate-local-density">Calculate Local Density</h3>
+<p>A cell's local density <span class="arithmatex">\(\rho\)</span> is defined to be the inverse of the mean
+cell area <span class="arithmatex">\(\bar{A}\)</span> of the cell and its neighbors:</p>
+<p><span class="arithmatex">\(\rho_i = \frac{1}{\bar{A}} = \frac{1}{\frac{1}{|\mathcal{N_i}| + 1} \left(A_i + \sum_{j \in \mathcal{N_i} }A_j\right)}\)</span></p>
+<pre><code class="language-nextflow">include { calculate_local_density } from './cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/main.nf'
+</code></pre>
+<h4 id="inputs">Inputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path)</td>
+<td>(<code>basename</code>, <code>fpath</code>)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>parent_dir_out</code></td>
+<td>val</td>
+<td>Directory to which the resulting file will be published.</td>
+</tr>
+</tbody>
+</table>
 
 
 
