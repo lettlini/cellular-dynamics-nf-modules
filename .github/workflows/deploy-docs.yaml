@@ -26,15 +26,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: setup miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        working-directory: docs  # Set working directory to docs
         with:
-          python-version: '3.12'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install mkdocs-material
+          activate-environment: docs-env
+          environment-file: docs-env.yml
+          auto-activate-base: false
 
       - name: Build and deploy
         working-directory: docs  # Set working directory to docs
