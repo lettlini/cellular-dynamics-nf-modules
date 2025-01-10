@@ -10,6 +10,7 @@ nav:
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
+  - callouts
 
 extra_javascript:
   - javascripts/mathjax.js
