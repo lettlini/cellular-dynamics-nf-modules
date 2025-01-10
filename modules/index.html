@@ -622,11 +622,110 @@
 </ol>
 <h2 id="image-processing-modules">Image Processing Modules</h2>
 <h3 id="nuclei-segmentation">Nuclei Segmentation</h3>
+<p>The <code>nuclei_segmentation</code> module provides a process that takes a
+<code>BaseDataSet</code> instance with confocal microscopy images (RGB)  showing stained nuclei
+as input. Subsequently, the images are grayscaled and re-scaled to the range <code>[0,1]</code>
+before nuclei are segmented via <a href="https://github.com/stardist/stardist">stardist</a>.</p>
+<p>Import the module into your pipeline script via</p>
+<pre><code class="language-nextflow">include { nuclei_segmentation } from './cellular-dynamics-nf-modules/modules/image_processing/nuclei_segmentation/main.nf'
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path)</td>
+<td>(<code>basename</code>, <code>fpath</code>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>stardist_probability_threshold</code></td>
+<td>val</td>
+<td>Floating point number defining <code>stardist</code> probability threshold.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>min_nucleus_area_pxsq</code></td>
+<td>val</td>
+<td>Floating point number defining the minimum nucleus area (in <span class="arithmatex">\(px^2\)</span>!). Segmented objects smaller than this will be removed.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>parent_dir_out</code></td>
+<td>val</td>
+<td>Directory to which the resulting file will be published.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="basic-filter">Basic Filter</h3>
 <h3 id="cell-approximation">Cell Approximation</h3>
 <h3 id="label-objects">Label Objects</h3>
 <h2 id="tracking-modules">Tracking Modules</h2>
 <h3 id="annotate-d2_textmin">Annotate <span class="arithmatex">\(D^2_\text{min}\)</span></h3>
+<p>The <code>annotate_D2min</code> module provides a process that calculates the
+cell motility measure <span class="arithmatex">\(D_\text{min}^2\)</span>. This measure quantifies non-affine
+movements of cells with regard to their neighbors by optimizing the
+strain tensor <span class="arithmatex">\(\pmb{E}\)</span>:</p>
+<p><span class="arithmatex">\(D^2_{\text{min}, i} = \text{min} \left[\frac{1}{N} \sum_{j \in \mathcal{N}_i} \left(\pmb{r}_{i,j}(t+T) - \pmb{E}_i \pmb{r}_{i,j}(t) \right) \right]\)</span></p>
+<p>Import the module into your pipeline script via</p>
+<pre><code class="language-nextflow">include { annotate_D2min } from './cellular-dynamics-nf-modules/modules/tracking/annotate_D2min/main.nf'
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path)</td>
+<td>(<code>basename</code>, <code>graph_dataset_fpath</code>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>delta_t_minutes</code></td>
+<td>val</td>
+<td>Floating point number defining the time (<span class="arithmatex">\(\Delta t\)</span>) between two adjacent frames.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>lag-times_minutes</code></td>
+<td>val</td>
+<td>String of comma-separated lag times (in minutes) the <span class="arithmatex">\(D^2_\text{min}\)</span> measure should be calculated for.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>mum_per_px</code></td>
+<td>val</td>
+<td>Floating point number defining the image resolution in microns per pixel (<span class="arithmatex">\(\frac{\mu m}{\text{px}}\)</span>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>minimum_neighbors</code></td>
+<td>val</td>
+<td>Integer defining the minimum number of successfully tracked neighbors needed for calculating <span class="arithmatex">\(D^2_\text{min}\)</span>. This should always be <code>2</code> or more.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>parent_dir_out</code></td>
+<td>val</td>
+<td>Directory to which the resulting file will be published.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="annotate-neighbor-retention">Annotate Neighbor Retention</h3>
 <h3 id="cell-tracking-overlap-tracking">Cell Tracking (Overlap Tracking)</h3>
 <h3 id="assemble-cell-tracks-dataframe">Assemble Cell Tracks DataFrame</h3>
