@@ -29,14 +29,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: create environment with mamba
-        uses: conda-incubator/setup-miniconda@v3
+      - uses: actions/setup-python@v5
         with:
-          mamba-version: "*"
-          channels: conda-forge
-          auto-activate-base: false
-          activate-environment: docs-env
-          environment-file: docs/docs-env.yml
+          python-version: '3.12'
+          cache: 'pip' # caching pip dependencies
+        - run: pip install -r docs/requirements.txt
 
       - name: Build and deploy
         working-directory: docs  # Set working directory to docs
