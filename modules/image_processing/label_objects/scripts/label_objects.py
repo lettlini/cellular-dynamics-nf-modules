@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
+import multiprocessing as mp
 
 
 class LabelImagesTransformation(BaseDataSetTransformation):
@@ -20,6 +21,8 @@ class LabelImagesTransformation(BaseDataSetTransformation):
 
 
 if __name__ == "__main__":
+
+    mp.set_start_method("spawn")
     parser = ArgumentParser()
 
     parser.add_argument(

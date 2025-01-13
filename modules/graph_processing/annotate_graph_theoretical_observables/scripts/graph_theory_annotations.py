@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 import networkx as nx
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
+import multiprocessing as mp
 
 
 class GraphTheoreticalAnnotationsTransform(BaseDataSetTransformation):
@@ -59,6 +60,8 @@ class GraphTheoreticalAnnotationsTransform(BaseDataSetTransformation):
 
 
 if __name__ == "__main__":
+    mp.set_start_method("spawn")
+
     parser = ArgumentParser()
 
     parser.add_argument(

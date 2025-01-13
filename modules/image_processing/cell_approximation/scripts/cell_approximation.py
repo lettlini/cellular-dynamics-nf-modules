@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
+import multiprocessing as mp
 
 
 def get_disconnected(timage: np.array) -> np.array:
@@ -124,6 +125,8 @@ class CellApproximationTransform(BaseDataSetTransformation):
 
 
 if __name__ == "__main__":
+
+    mp.set_start_method("spawn")
 
     cv2.setNumThreads(0)
 

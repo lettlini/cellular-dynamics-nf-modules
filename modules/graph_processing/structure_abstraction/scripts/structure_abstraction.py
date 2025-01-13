@@ -10,6 +10,8 @@ from core_data_utils.transformations import (
     BaseMultiDataSetTransformation,
 )
 
+import multiprocessing as mp
+
 
 class ObjectInformationTransform(BaseDataSetTransformation):
     def __init__(
@@ -199,6 +201,8 @@ class IdentifyNeighborsTransformation(BaseMultiDataSetTransformation):
 
 
 if __name__ == "__main__":
+
+    mp.set_start_method("spawn")
 
     parser = ArgumentParser()
 
