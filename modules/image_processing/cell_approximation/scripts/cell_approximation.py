@@ -61,30 +61,63 @@ class CellApproximationTransform(BaseDataSetTransformation):
         if self._cell_cutoff_px is not None:
             dislabels[bg_mask == 0] = 0
 
-        dislabels = self._ensure_cell_integrity(dislabels)
+        dislabels = self._ensure_cell_integrity(
+            nuclei_labelled=label_image, cell_approximation=dislabels
+        )
 
         dislabels = (dislabels > 0).astype(np.int8)
 
         return BaseDataSetEntry(identifier=entry.identifier, data=dislabels)
 
-    def _ensure_cell_integrity(self, label_image: np.array) -> np.array:
-        all_labels = np.setdiff1d(np.unique(label_image), np.array([0]))
-        set_zero_mask = np.zeros_like(label_image, dtype=bool)
+    def _ensure_cell_integrity(
+        self, nuclei_labelled: np.array, cell_approximation: np.array
+    ) -> np.array:
+        """
+        Ensure that each nucleus has exactly one associated connected component
+        in the cell-approximation mask by removing all connected components in
+        the cell approximation that have no overlap with the nucleus and
+        subsequently only keeping the largest cell connected component.
 
-        for label in all_labels:
-            current_mask = (label_image == label).astype(np.int8)
+        Args:
+            nuclei_labelled (np.array): 2D np.array of labelled nuclei
+            cell_approximation (np.array): 2D np.array of labelled cells
+        Returns:
+            (np.array): cell approximation mask with only the largest overlapping
+                connected components present
+        """
+
+        all_nuclei_labels = np.setdiff1d(nuclei_labelled, (0,))
+        set_zero_mask = np.zeros_like(cell_approximation, dtype=bool)
+
+        for nl in all_nuclei_labels:
+            # we need to check whether there are more than 1 connected components
+            current_mask = (cell_approximation == nl).astype(np.int8)
             num_labels, lbim, stats, _ = cv2.connectedComponentsWithStats(
                 current_mask, connectivity=8
             )
 
-            if num_labels > 2:  # first label: bg, second label: 1st cc
-                # we have too many connected components, set all to 0 exepct largest one
-                keep_label = np.argmax(stats[1:, 4]) + 1
-                set_zero_mask = np.logical_or(
-                    set_zero_mask, np.logical_and(lbim != keep_label, current_mask > 0)
+            assert num_labels > 0, f"Nucleus {nl} has no overlapping cells."
+
+            if num_labels > 2:  # first label: bg, second label: 1st cc,...
+                # we have more than 1 connected component for a single nucleus
+                all_related_ccs = np.setdiff1d(lbim[cell_approximation == nl], (0,))
+                overlapping_labels = np.unique(
+                    lbim[np.logical_and(nuclei_labelled == nl, lbim != 0)]
                 )
 
-        ret_image = label_image.copy()
+                # we wanto keep the largest CC that has overlap with the nucleus
+                keep_index = overlapping_labels[
+                    np.argmax(stats[overlapping_labels, 4], axis=0)
+                ]
+
+                # flag connected components for removal:
+                for cc_index in all_related_ccs:
+                    if cc_index != keep_index:
+                        set_zero_mask[lbim == cc_index] = 1
+
+            # else: we do nothing, everything is in order for this nucleus
+
+        ret_image = cell_approximation.copy()
         ret_image[set_zero_mask] = 0
 
         return ret_image
