@@ -1,9 +1,5 @@
 process calculate_local_density {
-
-    publishDir {
-        path: "${parent_dir_out}/${basename}"
-        enabled: workflow.debug
-    }
+    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
     input:
     tuple val(basename), path(graph_dataset)
