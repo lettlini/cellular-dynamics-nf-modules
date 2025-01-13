@@ -15,7 +15,7 @@ process calculate_local_density {
     script:
     """
     echo "Graph Dataset File Path: ${graph_dataset}, Basename: ${basename}"
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/annotate_graph_theoretical_observables/scripts/calculate_local_density.py \
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/scripts/calculate_local_density.py \
         --infile=${graph_dataset} \
         --outfile="graph_dataset_with_local_density.pickle" \
         --cpus=${task.cpus}
