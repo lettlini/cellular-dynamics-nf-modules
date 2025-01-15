@@ -19,7 +19,7 @@ def concatenate_tracking_dataframes(file_paths: list[str]) -> pl.DataFrame:
         current_last_track_id = current_df["track_id"].max()
 
         if big_dataframe is None:
-            big_dataframe = current_df.copy()
+            big_dataframe = current_df.clone()
         else:
             big_dataframe = big_dataframe.vstack(
                 current_df.select(big_dataframe.columns)
