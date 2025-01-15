@@ -60,6 +60,21 @@ include { annotate_D2min } from './cellular-dynamics-nf-modules/modules/tracking
 ### Annotate Neighbor Retention
 ### Cell Tracking (Overlap Tracking)
 ### Assemble Cell Tracks DataFrame
+### Concatenate Tracking DataFrames
+
+This module combines the tracking dataframes from all processed datasets into a single big dataframe.
+The cell track IDs are adjusted such that they remain unique in the dataframe.
+
+#### Inputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||val |```tracking_df_files_list```|  list of individual tracking dataframes' filepaths
+|2|`parent_dir_out`|val|Directory to which the resulting file will be published.|
+
+#### Outputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||path |```"all_cell_tracks.ipc"```|  file path of concatenated dataframe
 
 ## Graph Processing Modules
 
@@ -83,4 +98,4 @@ include { calculate_local_density } from './cellular-dynamics-nf-modules/modules
 |Argument Index | Argument Name|Argument Type|Description|
 |-|-|-|-|
 |1||tuple(val, path)|(`basename`, `fpath`)|
-|4|`parent_dir_out`|val|Directory to which the resulting file will be published.|
+|2|`parent_dir_out`|val|Directory to which the resulting file will be published.|
