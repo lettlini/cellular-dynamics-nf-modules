@@ -1,7 +1,7 @@
-import os
 from argparse import ArgumentParser
 
 import polars as pl
+import numpy as np
 
 
 def concatenate_tracking_dataframes(file_paths: list[str]) -> pl.DataFrame:
@@ -16,11 +16,18 @@ def concatenate_tracking_dataframes(file_paths: list[str]) -> pl.DataFrame:
         current_df = current_df.with_columns(
             (pl.col("track_id") + current_last_track_id).alias("track_id_unique")
         )
-        current_last_track_id = current_df["track_id"].max()
+        current_last_track_id += current_df["track_id"].max()
 
         if big_dataframe is None:
             big_dataframe = current_df.clone()
         else:
+            assert (
+                np.intersect1d(
+                    big_dataframe["track_id_unique"].to_numpy(),
+                    current_df["track_id_unique"].to_numpy(),
+                ).size
+                == 0
+            )
             big_dataframe = big_dataframe.vstack(
                 current_df.select(big_dataframe.columns)
             )
