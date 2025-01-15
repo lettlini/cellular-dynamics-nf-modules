@@ -2,10 +2,10 @@ from argparse import ArgumentParser
 from copy import deepcopy
 from typing import Any, Optional
 
+import networkx as nx
 import numpy as np
 from core_data_utils.datasets import BaseDataSet
 from tqdm import trange
-import networkx as nx
 
 
 def get_neighbor_list(G: nx.Graph, node: int) -> list[int]:

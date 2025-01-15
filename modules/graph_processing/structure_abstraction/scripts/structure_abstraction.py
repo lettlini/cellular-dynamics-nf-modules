@@ -1,3 +1,4 @@
+import multiprocessing as mp
 from argparse import ArgumentParser
 from collections import defaultdict
 from typing import Any
@@ -9,8 +10,6 @@ from core_data_utils.transformations import (
     BaseDataSetTransformation,
     BaseMultiDataSetTransformation,
 )
-
-import multiprocessing as mp
 
 
 class ObjectInformationTransform(BaseDataSetTransformation):

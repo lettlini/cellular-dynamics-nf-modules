@@ -1,10 +1,10 @@
 import inspect
+import multiprocessing as mp
 from argparse import ArgumentParser
 
 import networkx as nx
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
-import multiprocessing as mp
 
 
 class GraphTheoreticalAnnotationsTransform(BaseDataSetTransformation):
