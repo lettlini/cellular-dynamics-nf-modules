@@ -1,4 +1,4 @@
-process cell_tracking_overlap {
+process concatenate_tracking_dataframes {
     publishDir "${parent_dir_out}", mode: 'copy'
 
     input:
@@ -11,7 +11,7 @@ process cell_tracking_overlap {
     script:
     """
     echo '${tracking_df_files_list.join("\n")}' > file_list.txt
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/concatenate_trackign_dataframes/scripts/main.py \
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/concatenate_tracking_dataframes/scripts/main.py \
         --infile='./file_list.txt' \
         --outfile='all_cell_tracks.ipc'
     """
