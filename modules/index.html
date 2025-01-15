@@ -373,6 +373,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#concatenate-tracking-dataframes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concatenate Tracking DataFrames
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concatenate Tracking DataFrames">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -426,7 +459,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#inputs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -575,6 +608,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#concatenate-tracking-dataframes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concatenate Tracking DataFrames
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concatenate Tracking DataFrames">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -628,7 +694,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#inputs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -777,6 +843,53 @@ strain tensor <span class="arithmatex">\(\pmb{E}\)</span>:</p>
 <h3 id="annotate-neighbor-retention">Annotate Neighbor Retention</h3>
 <h3 id="cell-tracking-overlap-tracking">Cell Tracking (Overlap Tracking)</h3>
 <h3 id="assemble-cell-tracks-dataframe">Assemble Cell Tracks DataFrame</h3>
+<h3 id="concatenate-tracking-dataframes">Concatenate Tracking DataFrames</h3>
+<p>This module combines the tracking dataframes from all processed datasets into a single big dataframe.
+The cell track IDs are adjusted such that they remain unique in the dataframe.</p>
+<h4 id="inputs">Inputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>val</td>
+<td><code>tracking_df_files_list</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>parent_dir_out</code></td>
+<td>val</td>
+<td>Directory to which the resulting file will be published.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="outputs">Outputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>path</td>
+<td><code>"all_cell_tracks.ipc"</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="graph-processing-modules">Graph Processing Modules</h2>
 <h3 id="structure-abstraction">Structure Abstraction</h3>
 <h3 id="build-graphs">Build Graphs</h3>
@@ -787,7 +900,7 @@ cell area <span class="arithmatex">\(\bar{A}\)</span> of the cell and its neighb
 <p><span class="arithmatex">\(\rho_i = \frac{1}{\bar{A}} = \frac{1}{\frac{1}{|\mathcal{N_i}| + 1} \left(A_i + \sum_{j \in \mathcal{N_i} }A_j\right)}\)</span></p>
 <pre><code class="language-nextflow">include { calculate_local_density } from './cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/main.nf'
 </code></pre>
-<h4 id="inputs">Inputs:</h4>
+<h4 id="inputs_1">Inputs:</h4>
 <table>
 <thead>
 <tr>
@@ -805,7 +918,7 @@ cell area <span class="arithmatex">\(\bar{A}\)</span> of the cell and its neighb
 <td>(<code>basename</code>, <code>fpath</code>)</td>
 </tr>
 <tr>
-<td>4</td>
+<td>2</td>
 <td><code>parent_dir_out</code></td>
 <td>val</td>
 <td>Directory to which the resulting file will be published.</td>
