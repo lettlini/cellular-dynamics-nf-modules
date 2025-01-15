@@ -1,0 +1,18 @@
+process cell_tracking_overlap {
+    publishDir "${parent_dir_out}", mode: 'copy'
+
+    input:
+    val tracking_df_files_list
+    val parent_dir_out
+
+    output:
+    path "all_cell_tracks.ipc"
+
+    script:
+    """
+    echo '${tracking_df_files_list.join("\n")}' > file_list.txt
+    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/concatenate_trackign_dataframes/scripts/main.py \
+        --infile='./file_list.txt' \
+        --outfile='all_cell_tracks.ipc'
+    """
+}
