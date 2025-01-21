@@ -18,7 +18,7 @@ class OverlapTrackingTransformation:
         new_data_dict = {}
         properties = properties.copy()
 
-        for i in trange(len(cell_labels) - 1):
+        for i in trange(len(cell_labels)):
             centry = cell_labels[i]
             current_props = properties[i].data
 
