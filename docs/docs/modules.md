@@ -32,6 +32,28 @@ include { nuclei_segmentation } from './cellular-dynamics-nf-modules/modules/ima
 ### Cell Approximation
 ### Label Objects
 
+### Nucleus Displacement Index (NusDI)
+
+The _nucleus displacement index (NusDI)_ is defined to be the ratio of
+the distance of the nucleus centroid from the corresponding cell's centroid ($\lambda_\text{0}$)
+over the _maximum possible distance_ ($\lambda_\text{max}$) of the two centroids. This maximum
+possible distance will be determined by converting the cell and nucleus
+outline to polygons (`shapely.Polygon`) and trying a plethora of nucleus
+configurations (translations & rotations).
+
+$\delta_\text{NusDI} = \frac{\lambda_\text{0}}{\lambda_\text{max}}$
+
+#### Inputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||tuple(val, path, path, path)|(`basename`, labelled nuclei, labelled cells, graphs)|
+|2|`parent_dir_out`|val|Directory to which the resulting file will be published.|
+
+#### Outputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||tuple(val, path)|(`basename`, graph dataset with _NusDI_ annotations)|
+
 ## Tracking Modules
 
 ### Annotate $D^2_\text{min}$
