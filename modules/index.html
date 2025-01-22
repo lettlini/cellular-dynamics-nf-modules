@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a40c8224.min.css">
       
       
 
@@ -322,6 +322,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nucleus-displacement-index-nusdi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nucleus Displacement Index (NusDI)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nucleus Displacement Index (NusDI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -384,7 +417,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#inputs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -393,7 +426,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#outputs" class="md-nav__link">
+  <a href="#outputs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Outputs:
     </span>
@@ -459,7 +492,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs_1" class="md-nav__link">
+  <a href="#inputs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -557,6 +590,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nucleus-displacement-index-nusdi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nucleus Displacement Index (NusDI)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nucleus Displacement Index (NusDI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -619,7 +685,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#inputs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -628,7 +694,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#outputs" class="md-nav__link">
+  <a href="#outputs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Outputs:
     </span>
@@ -694,7 +760,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs_1" class="md-nav__link">
+  <a href="#inputs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -782,6 +848,58 @@ before nuclei are segmented via <a href="https://github.com/stardist/stardist">s
 <h3 id="basic-filter">Basic Filter</h3>
 <h3 id="cell-approximation">Cell Approximation</h3>
 <h3 id="label-objects">Label Objects</h3>
+<h3 id="nucleus-displacement-index-nusdi">Nucleus Displacement Index (NusDI)</h3>
+<p>The <em>nucleus displacement index (NusDI)</em> is defined to be the ratio of
+the distance of the nucleus centroid from the corresponding cell's centroid (<span class="arithmatex">\(\lambda_\text{0}\)</span>)
+over the <em>maximum possible distance</em> (<span class="arithmatex">\(\lambda_\text{max}\)</span>) of the two centroids. This maximum
+possible distance will be determined by converting the cell and nucleus
+outline to polygons (<code>shapely.Polygon</code>) and trying a plethora of nucleus
+configurations (translations &amp; rotations).</p>
+<p><span class="arithmatex">\(\delta_\text{NusDI} = \frac{\lambda_\text{0}}{\lambda_\text{max}}\)</span></p>
+<h4 id="inputs">Inputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path, path, path)</td>
+<td>(<code>basename</code>, labelled nuclei, labelled cells, graphs)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>parent_dir_out</code></td>
+<td>val</td>
+<td>Directory to which the resulting file will be published.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="outputs">Outputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path)</td>
+<td>(<code>basename</code>, graph dataset with <em>NusDI</em> annotations)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="tracking-modules">Tracking Modules</h2>
 <h3 id="annotate-d2_textmin">Annotate <span class="arithmatex">\(D^2_\text{min}\)</span></h3>
 <p>The <code>annotate_D2min</code> module provides a process that calculates the
@@ -846,7 +964,7 @@ strain tensor <span class="arithmatex">\(\pmb{E}\)</span>:</p>
 <h3 id="concatenate-tracking-dataframes">Concatenate Tracking DataFrames</h3>
 <p>This module combines the tracking dataframes from all processed datasets into a single big dataframe.
 The cell track IDs are adjusted such that they remain unique in the dataframe.</p>
-<h4 id="inputs">Inputs:</h4>
+<h4 id="inputs_1">Inputs:</h4>
 <table>
 <thead>
 <tr>
@@ -871,7 +989,7 @@ The cell track IDs are adjusted such that they remain unique in the dataframe.</
 </tr>
 </tbody>
 </table>
-<h4 id="outputs">Outputs:</h4>
+<h4 id="outputs_1">Outputs:</h4>
 <table>
 <thead>
 <tr>
@@ -900,7 +1018,7 @@ cell area <span class="arithmatex">\(\bar{A}\)</span> of the cell and its neighb
 <p><span class="arithmatex">\(\rho_i = \frac{1}{\bar{A}} = \frac{1}{\frac{1}{|\mathcal{N_i}| + 1} \left(A_i + \sum_{j \in \mathcal{N_i} }A_j\right)}\)</span></p>
 <pre><code class="language-nextflow">include { calculate_local_density } from './cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/main.nf'
 </code></pre>
-<h4 id="inputs_1">Inputs:</h4>
+<h4 id="inputs_2">Inputs:</h4>
 <table>
 <thead>
 <tr>
@@ -971,10 +1089,10 @@ cell area <span class="arithmatex">\(\bar{A}\)</span> of the cell and its neighb
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../assets/javascripts/bundle.60a45f97.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       
