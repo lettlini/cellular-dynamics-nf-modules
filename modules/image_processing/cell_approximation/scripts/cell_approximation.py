@@ -7,49 +7,114 @@ from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
 
 
-def get_disconnected(timage: np.array) -> np.array:
-    """Disconnects touching regions with different labels (stardist)"""
+class CellApproximationTransformation(BaseDataSetTransformation):
 
-    dmask = np.zeros_like(timage)
-
-    # get list of labels
-    lls = np.unique(timage)
-    lls = np.setdiff1d(lls, (0,))
-
-    for current_label in lls:
-        current_small_image = (timage == current_label).astype(np.uint8)
-        current_small_image = cv2.erode(
-            current_small_image, cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-        )
-        dmask += current_small_image
-
-    return ~(dmask.astype(bool))
-
-
-class CellApproximationTransform(BaseDataSetTransformation):
-    def __init__(self, cell_cutoff_px: int):
+    def __init__(self, cell_cutoff_px: int = None):
         self._cell_cutoff_px = cell_cutoff_px
 
         super().__init__()
 
+    @staticmethod
+    def get_disconnected(label_image: np.array, nuclei_mask: np.array):
+
+        all_cell_labels = np.setdiff1d(label_image, (0,))
+        disconnected_cell_labels = label_image.copy()
+
+        _, nuclei_labelled = cv2.connectedComponents(
+            nuclei_mask.astype(np.uint8), connectivity=8
+        )
+
+        height, width = label_image.shape
+
+        for cell_label in all_cell_labels:
+
+            corresponding_nucleus_label = np.setdiff1d(
+                nuclei_labelled[label_image == cell_label], (0,)
+            ).item()
+
+            binary_cell_mask = label_image == cell_label
+
+            num_labels, _ = cv2.connectedComponents(binary_cell_mask.astype(np.uint8))
+
+            if num_labels > 2:
+                # we have more than one connected component, keep only the largest one that has overlap with the
+                # corresponding nucleus
+
+                raise RuntimeError("More than one connected component in cell mask")
+
+            contours, _ = cv2.findContours(
+                binary_cell_mask.astype(np.uint8),
+                cv2.RETR_EXTERNAL,
+                cv2.CHAIN_APPROX_NONE,
+            )
+
+            assert len(contours) == 1
+
+            contour = contours[0].squeeze()
+
+            for column, row in contour:
+                # only delete if the pixel is not part of the nuclei mask
+                if nuclei_mask[row, column] == 0:
+                    current_neighbors = disconnected_cell_labels[
+                        max(0, row - 1) : min(height, row + 2),
+                        max(0, column - 1) : min(width, column + 2),
+                    ].flatten()
+
+                    if np.setdiff1d(current_neighbors, (0, cell_label)).size > 0:
+                        disconnected_cell_labels[row, column] = 0
+
+            new_num_ccs, new_labelled, new_stats, _ = cv2.connectedComponentsWithStats(
+                (disconnected_cell_labels == cell_label).astype(np.uint8),
+                connectivity=8,
+            )
+            if new_num_ccs > 2:
+                # removing pixels lead to two different connected components with the same label
+                # we only keep the one that overlaps with the corresponding nucleus and is the largest
+                overlapping_labels = np.setdiff1d(
+                    new_labelled[nuclei_labelled == corresponding_nucleus_label], (0,)
+                )
+
+                # we wanto keep the largest CC that has overlap with the nucleus
+                keep_index = overlapping_labels[
+                    np.argmax(new_stats[overlapping_labels, cv2.CC_STAT_AREA], axis=0)
+                ]
+
+                # we set all other labels to zero
+                disconnected_cell_labels[
+                    np.logical_and(
+                        disconnected_cell_labels == cell_label,
+                        new_labelled != keep_index,
+                    )
+                ] = 0
+
+        return disconnected_cell_labels
+
     def _transform_single_entry(
         self, entry: BaseDataSetEntry, dataset_properties: dict
     ) -> BaseDataSetEntry:
-        """Function to convert nuclei brightfield microscopy images (grayscale) to cell masks"""
-
         image = entry.data
 
+        num_nuclei, _ = cv2.connectedComponents(
+            (image > 0).astype(np.uint8), connectivity=8
+        )
+
         binary_nuclei_mask: np.array = (image > 0).astype(np.int8)
+
+        # we pad the binary nuclei mask with zeros to avoid border effects
+        binary_nuclei_mask = np.pad(
+            binary_nuclei_mask, 1, mode="constant", constant_values=0
+        )
+
         _, label_image = cv2.connectedComponents(binary_nuclei_mask)
 
         dislabels = label_image.copy().astype(np.int32)
-        bg_mask = np.ones_like(label_image)
+        bg_mask = np.zeros_like(label_image, dtype=bool)
         inimage = cv2.distanceTransform(
             (label_image == 0).astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE
         )
 
         if self._cell_cutoff_px is not None:
-            bg_mask[inimage >= self._cell_cutoff_px] = 0
+            bg_mask[inimage >= self._cell_cutoff_px] = True
 
         inimage = cv2.merge(3 * [inimage]).astype(np.uint8)
 
@@ -57,71 +122,30 @@ class CellApproximationTransform(BaseDataSetTransformation):
 
         # step 4: some post-processing
         dislabels[dislabels == -1] = 0  # set boundaries to 0
-        dislabels[get_disconnected(dislabels) == 1] = 0
 
-        if self._cell_cutoff_px is not None:
-            dislabels[bg_mask == 0] = 0
-
-        dislabels = self._ensure_cell_integrity(
-            nuclei_labelled=label_image, cell_approximation=dislabels
+        dislabels = CellApproximationTransformation.get_disconnected(
+            dislabels, binary_nuclei_mask
         )
 
-        dislabels = (dislabels > 0).astype(np.int8)
+        # limit cell area by distance transform
+        if self._cell_cutoff_px is not None:
+            dislabels[bg_mask] = 0
 
-        return BaseDataSetEntry(identifier=entry.identifier, data=dislabels)
+        # we remove the padding
+        dislabels = dislabels[1:-1, 1:-1]
 
-    def _ensure_cell_integrity(
-        self, nuclei_labelled: np.array, cell_approximation: np.array
-    ) -> np.array:
-        """
-        Ensure that each nucleus has exactly one associated connected component
-        in the cell-approximation mask by removing all connected components in
-        the cell approximation that have no overlap with the nucleus and
-        subsequently only keeping the largest cell connected component.
+        # return a binary mask
+        dislabels = (dislabels > 0).astype(np.uint8)
 
-        Args:
-            nuclei_labelled (np.array): 2D np.array of labelled nuclei
-            cell_approximation (np.array): 2D np.array of labelled cells
-        Returns:
-            (np.array): cell approximation mask with only the largest overlapping
-                connected components present
-        """
+        num_cells, _ = cv2.connectedComponents(dislabels)
 
-        all_nuclei_labels = np.setdiff1d(nuclei_labelled, (0,))
-        set_zero_mask = np.zeros_like(cell_approximation, dtype=bool)
+        assert (
+            num_cells == num_nuclei
+        ), f"Number of cells ({num_cells}) does not match number of nuclei ({num_nuclei})"
 
-        for nl in all_nuclei_labels:
-            # we need to check whether there are more than 1 connected components
-            current_mask = (cell_approximation == nl).astype(np.int8)
-            num_labels, lbim, stats, _ = cv2.connectedComponentsWithStats(
-                current_mask, connectivity=8
-            )
-
-            assert num_labels > 0, f"Nucleus {nl} has no overlapping cells."
-
-            if num_labels > 2:  # first label: bg, second label: 1st cc,...
-                # we have more than 1 connected component for a single nucleus
-                all_related_ccs = np.setdiff1d(lbim[cell_approximation == nl], (0,))
-                overlapping_labels = np.unique(
-                    lbim[np.logical_and(nuclei_labelled == nl, lbim != 0)]
-                )
-
-                # we wanto keep the largest CC that has overlap with the nucleus
-                keep_index = overlapping_labels[
-                    np.argmax(stats[overlapping_labels, 4], axis=0)
-                ]
-
-                # flag connected components for removal:
-                for cc_index in all_related_ccs:
-                    if cc_index != keep_index:
-                        set_zero_mask[lbim == cc_index] = 1
-
-            # else: we do nothing, everything is in order for this nucleus
-
-        ret_image = cell_approximation.copy()
-        ret_image[set_zero_mask] = 0
-
-        return ret_image
+        return BaseDataSetEntry(
+            identifier=entry.identifier, data=dislabels, metadata=entry.metadata
+        )
 
 
 if __name__ == "__main__":
@@ -154,7 +178,7 @@ if __name__ == "__main__":
 
     x = BaseDataSet.from_pickle(args.infile)
 
-    x = CellApproximationTransform(cell_cutoff_px=args.cell_cutoff_px)(
+    x = CellApproximationTransformation(cell_cutoff_px=args.cell_cutoff_px)(
         dataset=x, cpus=args.cpus
     )
 
