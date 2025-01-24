@@ -9,23 +9,54 @@ from core_data_utils.transformations import BaseDataSetTransformation
 from stardist.models import StarDist2D
 
 
-def get_disconnected(timage: np.array) -> np.array:
-    """Disconnects touching regions with different labels (stardist)"""
+def get_disconnected(labels):
+    """
+    Disconnect touching regions with different labels (stardist).
 
-    dmask = np.zeros_like(timage)
+    Args:
+        labels (np.array): Label image.
 
-    # get list of labels
-    lls = np.unique(timage)
-    lls = np.setdiff1d(lls, (0,))
+    Returns:
+        (np.array): Disconnected label image.
+    """
 
-    for current_label in lls:
-        current_small_image = (timage == current_label).astype(np.uint8)
-        current_small_image = cv2.erode(
-            current_small_image, cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    disconnected_labels = labels.copy()
+    all_labels = np.setdiff1d(disconnected_labels, (0,))  # ignore background
+
+    height, width = disconnected_labels.shape
+
+    for cl in all_labels:
+        mask = disconnected_labels == cl  # binary object mask
+
+        # check whether there are more than one connected components
+        num_ccs, labelled_ccs, stats, _ = cv2.connectedComponentsWithStats(
+            mask.astype(np.uint8), connectivity=8
         )
-        dmask += current_small_image
 
-    return ~(dmask.astype(bool))
+        if num_ccs > 2:
+            # delete all but the largest connected component
+            keep_label = np.argmax(stats[1:, cv2.CC_STAT_AREA]) + 1
+            mask[labelled_ccs != keep_label] = 0
+
+        contours, _ = cv2.findContours(
+            mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
+        )
+
+        assert len(contours) == 1, f"More than one contour found for label {cl}."
+
+        contour_points = contours[0].squeeze()
+
+        for column, row in contour_points:
+            current_neighbors = disconnected_labels[
+                max(0, row - 1) : min(height, row + 2),
+                max(0, column - 1) : min(width, column + 2),
+            ].flatten()
+
+            # only delete pixel if necessary
+            if np.setdiff1d(current_neighbors, (0, cl)).size > 0:
+                disconnected_labels[row, column] = 0
+
+    return disconnected_labels
 
 
 class MinMaxScaleTransform(BaseDataSetTransformation):
@@ -71,8 +102,7 @@ class StarDistSegmentationTransform(BaseDataSetTransformation):
         labels, info = self._stardist_model.predict_instances(image)
 
         # We need to disconnect touching labels:
-        dmask = get_disconnected(labels)
-        labels[dmask == 1] = 0
+        labels = get_disconnected(labels)
 
         if self._probability_threshold is not None:
             for j in range(len(info["prob"])):
@@ -82,7 +112,9 @@ class StarDistSegmentationTransform(BaseDataSetTransformation):
         # convert label image to binary mask
         labels = (labels > 0).astype(np.int8)
 
-        return BaseDataSetEntry(identifier=entry.identifier, data=labels)
+        return BaseDataSetEntry(
+            identifier=entry.identifier, data=labels, metadata=entry.metadata
+        )
 
 
 class RemoveSmallObjectsTransform(BaseDataSetTransformation):
@@ -115,7 +147,9 @@ class RemoveSmallObjectsTransform(BaseDataSetTransformation):
 
 
 if __name__ == "__main__":
+
     cv2.setNumThreads(0)
+
     parser = ArgumentParser()
     parser.add_argument(
         "--infile", required=True, type=str, help="Absolute path to input file"
