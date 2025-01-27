@@ -123,7 +123,7 @@ class MergeCellNucleiInformation(BaseMultiDataSetTransformation):
 
 class IdentifyNeighborsTransformation(BaseMultiDataSetTransformation):
     def __init__(
-        self, mum_px: float, cutout_size: int = 30, dilation_size: int = 10
+        self, mum_px: float, cutout_size: int = 30, dilation_size: int = 5
     ) -> None:
         self._mum_per_px = mum_px
         self._cutout_size = cutout_size
