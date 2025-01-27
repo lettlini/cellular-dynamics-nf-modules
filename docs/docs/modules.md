@@ -79,6 +79,31 @@ include { annotate_D2min } from './cellular-dynamics-nf-modules/modules/tracking
 |5|`minimum_neighbors`|val|Integer defining the minimum number of successfully tracked neighbors needed for calculating $D^2_\text{min}$. This should always be `2` or more.|
 |6|`parent_dir_out`|val|Directory to which the resulting file will be published.|
 
+### Annotate Cage-Relative Squared Displacement
+
+The `cage_relative_squared_displacement` module calculates the _cage-relative
+squared displacement_ (CRSD) defined as:
+
+$\text{CRSD}_i = \left[ \pmb{x}_i (t+\tau) - \pmb{x}_i (t) - \left\langle \pmb{x}_j (t+\tau) - \pmb{x}_j (t) \right\rangle_{j\in \mathcal{N}(i)}\right]^2$
+
+with $\left\langle \pmb{x}_j (t+\tau) - \pmb{x}_j (t) \right\rangle_{j\in \mathcal{N}(i)}$ being the mean displacement vector of
+cell $i$'s neighbors.
+
+#### Inputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||tuple(val, path)|(`basename`, `graph_dataset_fpath`)|
+|2|`delta_t_minutes`|val|Floating point number defining the time ($\Delta t$) between two adjacent frames.|
+|3|`lag-times_minutes`|val|String of comma-separated lag times (in minutes) the CRSD measure should be calculated for.|
+|4|`mum_per_px`|val|Floating point number defining the image resolution in microns per pixel ($\frac{\mu m}{\text{px}}$)|
+|5|`parent_dir_out`|val|Directory to which the resulting file will be published.|
+
+#### Outputs:
+|Argument Index | Argument Name|Argument Type|Description|
+|-|-|-|-|
+|1||tuple(val, path)|(`basename`, graph dataset with _CRSD_ annotations)|
+
+
 ### Annotate Neighbor Retention
 ### Cell Tracking (Overlap Tracking)
 ### Assemble Cell Tracks DataFrame
