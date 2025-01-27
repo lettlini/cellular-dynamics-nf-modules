@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
-import polars as pl
 import numpy as np
+import polars as pl
 
 
 def concatenate_tracking_dataframes(file_paths: list[str]) -> pl.DataFrame:
