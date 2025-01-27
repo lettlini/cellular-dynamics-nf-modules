@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from typing import Optional
 
 import networkx as nx
 import numpy as np
