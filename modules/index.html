@@ -380,6 +380,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#annotate-cage-relative-squared-displacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Annotate Cage-Relative Squared Displacement
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Annotate Cage-Relative Squared Displacement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#annotate-neighbor-retention" class="md-nav__link">
     <span class="md-ellipsis">
       Annotate Neighbor Retention
@@ -417,7 +450,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs_1" class="md-nav__link">
+  <a href="#inputs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -426,7 +459,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#outputs_1" class="md-nav__link">
+  <a href="#outputs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Outputs:
     </span>
@@ -492,7 +525,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs_2" class="md-nav__link">
+  <a href="#inputs_3" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -648,6 +681,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#annotate-cage-relative-squared-displacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Annotate Cage-Relative Squared Displacement
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Annotate Cage-Relative Squared Displacement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inputs:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outputs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#annotate-neighbor-retention" class="md-nav__link">
     <span class="md-ellipsis">
       Annotate Neighbor Retention
@@ -685,7 +751,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs_1" class="md-nav__link">
+  <a href="#inputs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -694,7 +760,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#outputs_1" class="md-nav__link">
+  <a href="#outputs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Outputs:
     </span>
@@ -760,7 +826,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputs_2" class="md-nav__link">
+  <a href="#inputs_3" class="md-nav__link">
     <span class="md-ellipsis">
       Inputs:
     </span>
@@ -958,13 +1024,81 @@ strain tensor <span class="arithmatex">\(\pmb{E}\)</span>:</p>
 </tr>
 </tbody>
 </table>
+<h3 id="annotate-cage-relative-squared-displacement">Annotate Cage-Relative Squared Displacement</h3>
+<p>The <code>cage_relative_squared_displacement</code> module calculates the <em>cage-relative
+squared displacement</em> (CRSD) defined as:</p>
+<p><span class="arithmatex">\(\text{CRSD}_i = \left[ \pmb{x}_i (t+\tau) - \pmb{x}_i (t) - \left\langle \pmb{x}_j (t+\tau) - \pmb{x}_j (t) \right\rangle_{j\in \mathcal{N}(i)}\right]^2\)</span></p>
+<p>with <span class="arithmatex">\(\left\langle \pmb{x}_j (t+\tau) - \pmb{x}_j (t) \right\rangle_{j\in \mathcal{N}(i)}\)</span> being the mean displacement vector of
+cell <span class="arithmatex">\(i\)</span>'s neighbors.</p>
+<h4 id="inputs_1">Inputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path)</td>
+<td>(<code>basename</code>, <code>graph_dataset_fpath</code>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>delta_t_minutes</code></td>
+<td>val</td>
+<td>Floating point number defining the time (<span class="arithmatex">\(\Delta t\)</span>) between two adjacent frames.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>lag-times_minutes</code></td>
+<td>val</td>
+<td>String of comma-separated lag times (in minutes) the CRSD measure should be calculated for.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>mum_per_px</code></td>
+<td>val</td>
+<td>Floating point number defining the image resolution in microns per pixel (<span class="arithmatex">\(\frac{\mu m}{\text{px}}\)</span>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>parent_dir_out</code></td>
+<td>val</td>
+<td>Directory to which the resulting file will be published.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="outputs_1">Outputs:</h4>
+<table>
+<thead>
+<tr>
+<th>Argument Index</th>
+<th>Argument Name</th>
+<th>Argument Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td>tuple(val, path)</td>
+<td>(<code>basename</code>, graph dataset with <em>CRSD</em> annotations)</td>
+</tr>
+</tbody>
+</table>
 <h3 id="annotate-neighbor-retention">Annotate Neighbor Retention</h3>
 <h3 id="cell-tracking-overlap-tracking">Cell Tracking (Overlap Tracking)</h3>
 <h3 id="assemble-cell-tracks-dataframe">Assemble Cell Tracks DataFrame</h3>
 <h3 id="concatenate-tracking-dataframes">Concatenate Tracking DataFrames</h3>
 <p>This module combines the tracking dataframes from all processed datasets into a single big dataframe.
 The cell track IDs are adjusted such that they remain unique in the dataframe.</p>
-<h4 id="inputs_1">Inputs:</h4>
+<h4 id="inputs_2">Inputs:</h4>
 <table>
 <thead>
 <tr>
@@ -989,7 +1123,7 @@ The cell track IDs are adjusted such that they remain unique in the dataframe.</
 </tr>
 </tbody>
 </table>
-<h4 id="outputs_1">Outputs:</h4>
+<h4 id="outputs_2">Outputs:</h4>
 <table>
 <thead>
 <tr>
@@ -1018,7 +1152,7 @@ cell area <span class="arithmatex">\(\bar{A}\)</span> of the cell and its neighb
 <p><span class="arithmatex">\(\rho_i = \frac{1}{\bar{A}} = \frac{1}{\frac{1}{|\mathcal{N_i}| + 1} \left(A_i + \sum_{j \in \mathcal{N_i} }A_j\right)}\)</span></p>
 <pre><code class="language-nextflow">include { calculate_local_density } from './cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/main.nf'
 </code></pre>
-<h4 id="inputs_2">Inputs:</h4>
+<h4 id="inputs_3">Inputs:</h4>
 <table>
 <thead>
 <tr>
