@@ -412,20 +412,20 @@ This guide will shortly explain how to get started.</p>
 <h2 id="prerequesites">Prerequesites</h2>
 <p>What you'll need:
 1. <a href="https://www.nextflow.io/">nextflow</a> installation
-2. <a href="https://github.com/conda-forge/miniforge">miniforge</a> [^1]
-3. the <code>cmot-pipeline</code> python environment as defined in <code>environment.yml</code> [^2]
-4. The <code>cellular-dynamics-nf-modules</code> repository downloaded in your project folder, e.g.</p>
-<pre><code>Your Project/
-│
-├── pipeline.nf
-│
-├── nextflow.config
-│
-└── cellular-dynamics-nf-modules/
-    ├── modules/
-    ├── docs/
-    └── ...
-</code></pre>
+2. <a href="https://github.com/conda-forge/miniforge">miniforge</a> <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>
+3. the <code>cmot-pipeline</code> python environment as defined in <code>environment.yml</code> <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>
+4. The <code>cellular-dynamics-nf-modules</code> repository downloaded in your project folder, e.g.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Your Project/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── pipeline.nf
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── nextflow.config
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── cellular-dynamics-nf-modules/
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    ├── modules/
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    ├── docs/
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    └── ...
+</span></code></pre></div></p>
 <h2 id="simple-pipeline-example">Simple Pipeline Example</h2>
 <h3 id="defining-the-pipeline-steps">Defining the Pipeline Steps</h3>
 <p>In this section we develop a short pipeline that
@@ -434,107 +434,114 @@ This guide will shortly explain how to get started.</p>
 3. runs the cell approximation (see <a href="../modules/#cell-approximation"><code>cell_approximation</code> module</a>)</p>
 <p>In the pipeline definition (<code>pipeline.nf</code>) we start by importing the pre-defined nextflow processes
 <code>nuclei_segmentation</code> and <code>cell_approximation</code>:</p>
-<pre><code class="language-nextflow">include { nuclei_segmentation } from './cellular-dynamics-nf-modules/modules/image_processing/nuclei_segmentation/main.nf'
-include { cell_approximation } from './cellular-dynamics-nf-modules/modules/image_processing/cell_approximation/main.nf'
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>include { nuclei_segmentation } from &#39;./cellular-dynamics-nf-modules/modules/image_processing/nuclei_segmentation/main.nf&#39;
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>include { cell_approximation } from &#39;./cellular-dynamics-nf-modules/modules/image_processing/cell_approximation/main.nf&#39;
+</span></code></pre></div>
 <p>Next, we define a process that will read the raw image files and stores them in an instance of the
 <code>python</code>-class <a href="https://github.com/lettlini/core-data-utils/blob/f47e058826d6d9905e75b61b8f154815d876d788/core_data_utils/datasets/base_dataset.py#L48C1-L48C19"><code>BaseDataSet</code></a>.
 This class is defined in the <a href="https://github.com/lettlini/core-data-utils"><code>core-data-utils</code> repository</a> which provides the basic framework
 for reading, storing and manipulating any kind of data we might need in our pipeline.</p>
 <p>Create a new <code>python</code>-script called <code>prepare_data.py</code> with content similar to</p>
-<pre><code class="language-python">from argparse import ArgumentParser
-
-import cv2
-from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
-from core_data_utils.datasets.image import ImageDataset
-
-
-if __name__ == &quot;__main__&quot;:
-
-    cv2.setNumThreads(0)
-
-    parser = ArgumentParser()
-    parser.add_argument(&quot;--indir&quot;, type=str, required=True)
-    parser.add_argument(&quot;--outfile&quot;, type=str, required=True)
-
-    args = parser.parse_args()
-
-    # this will read all images in the directory 'args.indir' and store them in 'x'
-    x = ImageDataSet.from_directory(args.indir)
-
-    # write dataset 'x' to disk via pickle
-    x.to_pickle(args.outfile)
-</code></pre>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">argparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArgumentParser</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">core_data_utils.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseDataSet</span><span class="p">,</span> <span class="n">BaseDataSetEntry</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">core_data_utils.datasets.image</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageDataset</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">setNumThreads</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">()</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--indir&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--outfile&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="c1"># this will read all images in the directory &#39;args.indir&#39; and store them in &#39;x&#39;</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">ImageDataSet</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">indir</span><span class="p">)</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="c1"># write dataset &#39;x&#39; to disk via pickle</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="n">x</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">outfile</span><span class="p">)</span>
+</span></code></pre></div>
 <p>To call this script in our <code>nextflow</code> pipeline, define a <em>new process</em>
 in <code>pipeline.nf</code>:</p>
-<pre><code class="language-nextflow">process prepare_dataset{
-
-    label &quot;low_cpu&quot;, &quot;short_running&quot; // can be used to control the amount of resources allocated for process by SLURM
-
-    // define what inputs the process requires
-    input:
-    tuple val(basename), path(dataset_path)
-
-    // define what the process will output
-    output:
-    tuple val(basename), path(&quot;original_dataset.pickle&quot;), emit: results
-
-    /*
-    define what bash-script will be executed, in this case we simply call
-    our python script 'prepare_dataset.py' and suppy it with the
-    process's input arguments as 'command line arguments' (that's why we need
-    an ArgumentParser in the python script).
-    */
-    script:
-    &quot;&quot;&quot;
-    python ${projectDir}/scripts/prepare_dataset.py \
-        --indir=&quot;${dataset_path}&quot; \
-        --outfile=&quot;original_dataset.pickle&quot;
-    &quot;&quot;&quot;
-}
-</code></pre>
-<p>With this preliminary process in place we can define the full pipeline:</p>
-<pre><code class="language-nextflow">
-workflow {
-    // we create a queue-channel listing all dataset directories inside a common parent directory (params.parent_indir)
-    // params.parent_indir can be supplied either via a config file or directly be specified
-    input_datasets = Channel.fromPath(file(params.parent_indir).resolve(params.in_dir).toString(), type: &quot;dir&quot;)
-
-    // Transform the channel to emit both the directory and its basename
-    // This creates a tuple channel: [dir, basename]
-    input_datasets = input_datasets.map { dir -&gt;
-        def basename = dir.name
-        [basename, dir]
-    }
-
-    // prepare datasets:
-    prepare_dataset(input_datasets)
-
-    /* the output of prepare_datasets is the input for the nuclei_segmentation
-    in addition to the prepared dataset pickle file which is output by the previous process
-    we also need to specify:
-        1. the stardist probability threshold
-        2. minimum nucleus area (in px^2)
-        3. the directory to which the output should be published
-    */
-    nuclei_segmentation(prepare_dataset.out.results, 0.473, ...)
-
-    /* the output of the nuclei segmentation is then fed to the 'cell_approximation'
-    process: (for a more detailed documentation of the input parameters the processes expect see
-    the corresponding module documentation)
-    */
-    cell_approximation(nuclei_segmentation.out.results, cell_cutoff_px, parent_dir_out)
-}
-
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>process prepare_dataset{
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    label &quot;low_cpu&quot;, &quot;short_running&quot; // can be used to control the amount of resources allocated for process by SLURM
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    // define what inputs the process requires
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    input:
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    tuple val(basename), path(dataset_path)
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    // define what the process will output
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    output:
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    tuple val(basename), path(&quot;original_dataset.pickle&quot;), emit: results
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    /*
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    define what bash-script will be executed, in this case we simply call
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    our python script &#39;prepare_dataset.py&#39; and suppy it with the
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    process&#39;s input arguments as &#39;command line arguments&#39; (that&#39;s why we need
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    an ArgumentParser in the python script).
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    */
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    script:
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    &quot;&quot;&quot;
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    python ${projectDir}/scripts/prepare_dataset.py \
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        --indir=&quot;${dataset_path}&quot; \
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        --outfile=&quot;original_dataset.pickle&quot;
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    &quot;&quot;&quot;
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>}
+</span></code></pre></div>
+<p>With this preliminary process in place we can define the full pipeline:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>workflow {
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    // we create a queue-channel listing all dataset directories inside a common parent directory (params.parent_indir)
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    // params.parent_indir can be supplied either via a config file or directly be specified
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    input_datasets = Channel.fromPath(file(params.parent_indir).resolve(params.in_dir).toString(), type: &quot;dir&quot;)
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    // Transform the channel to emit both the directory and its basename
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    // This creates a tuple channel: [dir, basename]
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    input_datasets = input_datasets.map { dir -&gt;
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        def basename = dir.name
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        [basename, dir]
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    }
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    // prepare datasets:
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    prepare_dataset(input_datasets)
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    /* the output of prepare_datasets is the input for the nuclei_segmentation
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    in addition to the prepared dataset pickle file which is output by the previous process
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    we also need to specify:
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        1. the stardist probability threshold
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        2. minimum nucleus area (in px^2)
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        3. the directory to which the output should be published
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    */
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    nuclei_segmentation(prepare_dataset.out.results, 0.473, ...)
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    /* the output of the nuclei segmentation is then fed to the &#39;cell_approximation&#39;
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    process: (for a more detailed documentation of the input parameters the processes expect see
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    the corresponding module documentation)
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>    */
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    cell_approximation(nuclei_segmentation.out.results, cell_cutoff_px, parent_dir_out)
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>}
+</span></code></pre></div></p>
 <h3 id="run-the-example-pipeline">Run the Example Pipeline</h3>
 <p>To run the pipeline, run the following command from the directory the <code>pipeline.nf</code>
 file resides in:</p>
-<pre><code class="language-bash">nextflow run ./pipeline.nf
-</code></pre>
-<p>[^1]: or another python distribution that comes with <code>conda</code> or <code>mamba</code>
-[^2]: This environment contains <strong>all</strong> module dependencies. Depending on which ones you are planning
-to use some dependencies might not be needed.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nextflow<span class="w"> </span>run<span class="w"> </span>./pipeline.nf
+</span></code></pre></div>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>or another python distribution that comes with <code>conda</code> or <code>mamba</code>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>This environment contains <strong>all</strong> module dependencies. Depending on which ones you are planning
+to use some dependencies might not be needed.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -581,7 +588,7 @@ to use some dependencies might not be needed.</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.select"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.60a45f97.min.js"></script>
