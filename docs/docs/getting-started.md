@@ -4,6 +4,7 @@ This guide will shortly explain how to get started.
 ## Prerequesites
 
 What you'll need:
+
 1. [nextflow](https://www.nextflow.io/) installation
 
 2. [miniforge](https://github.com/conda-forge/miniforge) [^1]
