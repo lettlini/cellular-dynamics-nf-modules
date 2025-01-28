@@ -11,8 +11,6 @@ process structure_abstraction {
 
     script:
     """
-    echo "Cell File Path: ${cell_fpath}, Basename: ${basename}"
-    echo "Nuclei File Path: ${nuclei_fpath}, Basename: ${basename}"
 
     python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/structure_abstraction/scripts/structure_abstraction.py \
         --nuclei_infile="${nuclei_fpath}" \

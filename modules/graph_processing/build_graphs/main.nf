@@ -11,7 +11,6 @@ process build_graphs {
 
     script:
     """
-    echo "Abstract Structure Path: ${abstract_structure_fpath}, Basename: ${basename}"
     python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/build_graphs/scripts/build_graphs.py \
         --infile=${abstract_structure_fpath} \
         --mum_per_px=${mum_per_px} \

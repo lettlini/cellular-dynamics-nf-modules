@@ -10,8 +10,6 @@ process cell_tracking_overlap {
 
     script:
     """
-    echo "Cell Approximation Path: ${cell_approximation_fpath}, Basename: ${basename}"
-    echo "Abstract Structure Path: ${abstract_structure_fpath}, Basename: ${basename}"
     python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/cell_tracking_overlap/scripts/track_cells.py \
         --cell_label_file=${cell_approximation_fpath} \
         --abstract_structure_file=${abstract_structure_fpath} \

@@ -12,7 +12,6 @@ process annotate_neighbor_retention {
 
     script:
     """
-    echo "Graph Dataset File Path: ${graph_dataset_fpath}, Basename: ${basename}"
     python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/annotate_neighbor_retention/scripts/annotate_neighbor_retention.py \
         --infile=${graph_dataset_fpath} \
         --outfile="neighbor_retention_graph_ds.pickle" \

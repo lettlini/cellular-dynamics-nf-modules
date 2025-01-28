@@ -15,7 +15,6 @@ process nuclei_segmentation {
 
     script:
     """
-    echo "Dataset Path: ${fpath}, Basename: ${basename}"
     python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/nuclei_segmentation/scripts/nuclei_segmentation.py \
         --infile="${fpath}" \
         --outfile="nuclei_segmentation.pickle" \

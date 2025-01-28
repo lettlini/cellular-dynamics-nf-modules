@@ -16,7 +16,6 @@ process annotate_D2min {
 
     script:
     """
-    echo "Graph Dataset File Path: ${graph_dataset_fpath}, Basename: ${basename}"
     python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/annotate_D2min/scripts/annotate_D2min.py \
         --infile=${graph_dataset_fpath} \
         --outfile="D2min_annotated_graphs.pickle" \

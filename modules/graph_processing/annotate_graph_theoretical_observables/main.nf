@@ -12,7 +12,6 @@ process annotate_graph_theoretical_observables {
 
     script:
     """
-    echo "Graph Dataset File Path: ${graph_dataset_fpath}, Basename: ${basename}"
     python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/annotate_graph_theoretical_observables/scripts/graph_theory_annotations.py \
         --infile=${graph_dataset_fpath} \
         --outfile="graph_dataset_annotated.pickle" \
