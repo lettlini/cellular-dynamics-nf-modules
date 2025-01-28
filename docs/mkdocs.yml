@@ -11,6 +11,7 @@ markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - callouts
+  - footnotes
 
 extra_javascript:
   - javascripts/mathjax.js
