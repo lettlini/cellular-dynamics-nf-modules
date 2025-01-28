@@ -2,6 +2,9 @@ site_name: Nextflow Modules for Researching Cellular Dynamics
 site_url: https://lettlini.github.io/cellular-dynamics-nf-modules/
 theme:
   name: material
+  features:
+    - content.code.copy
+    - content.code.select
 nav:
   - Introduction: index.md
   - Getting Started: getting-started.md
@@ -12,6 +15,13 @@ markdown_extensions:
       generic: true
   - callouts
   - footnotes
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
 
 extra_javascript:
   - javascripts/mathjax.js
