@@ -5,9 +5,13 @@ This guide will shortly explain how to get started.
 
 What you'll need:
 1. [nextflow](https://www.nextflow.io/) installation
+
 2. [miniforge](https://github.com/conda-forge/miniforge) [^1]
+
 3. the `cmot-pipeline` python environment as defined in `environment.yml` [^2]
+
 4. The `cellular-dynamics-nf-modules` repository downloaded in your project folder, e.g.
+
 ```
 Your Project/
 │
