@@ -63,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#prerequesites" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -215,6 +220,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -224,6 +240,65 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequesites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequesites
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-pipeline-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Pipeline Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Simple Pipeline Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-the-pipeline-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining the Pipeline Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-example-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run the Example Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -267,6 +342,56 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequesites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequesites
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-pipeline-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Pipeline Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Simple Pipeline Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-the-pipeline-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining the Pipeline Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-example-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run the Example Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -282,7 +407,134 @@
 
   <h1>Getting Started</h1>
 
+<p>Implementing your own nextflow pipeline for you research on cellular dynamics in cell monolayers is easy.
+This guide will shortly explain how to get started.</p>
+<h2 id="prerequesites">Prerequesites</h2>
+<p>What you'll need:
+1. <a href="https://www.nextflow.io/">nextflow</a> installation
+2. <a href="https://github.com/conda-forge/miniforge">miniforge</a> [^1]
+3. the <code>cmot-pipeline</code> python environment as defined in <code>environment.yml</code> [^2]
+4. The <code>cellular-dynamics-nf-modules</code> repository downloaded in your project folder, e.g.</p>
+<pre><code>Your Project/
+│
+├── pipeline.nf
+│
+├── nextflow.config
+│
+└── cellular-dynamics-nf-modules/
+    ├── modules/
+    ├── docs/
+    └── ...
+</code></pre>
+<h2 id="simple-pipeline-example">Simple Pipeline Example</h2>
+<h3 id="defining-the-pipeline-steps">Defining the Pipeline Steps</h3>
+<p>In this section we develop a short pipeline that
+1. loads our data
+2. segments the nuclei (see <a href="../modules/#nuclei-segmentation"><code>nuclei_segmentation</code> module</a>)
+3. runs the cell approximation (see <a href="../modules/#cell-approximation"><code>cell_approximation</code> module</a>)</p>
+<p>In the pipeline definition (<code>pipeline.nf</code>) we start by importing the pre-defined nextflow processes
+<code>nuclei_segmentation</code> and <code>cell_approximation</code>:</p>
+<pre><code class="language-nextflow">include { nuclei_segmentation } from './cellular-dynamics-nf-modules/modules/image_processing/nuclei_segmentation/main.nf'
+include { cell_approximation } from './cellular-dynamics-nf-modules/modules/image_processing/cell_approximation/main.nf'
+</code></pre>
+<p>Next, we define a process that will read the raw image files and stores them in an instance of the
+<code>python</code>-class <a href="https://github.com/lettlini/core-data-utils/blob/f47e058826d6d9905e75b61b8f154815d876d788/core_data_utils/datasets/base_dataset.py#L48C1-L48C19"><code>BaseDataSet</code></a>.
+This class is defined in the <a href="https://github.com/lettlini/core-data-utils"><code>core-data-utils</code> repository</a> which provides the basic framework
+for reading, storing and manipulating any kind of data we might need in our pipeline.</p>
+<p>Create a new <code>python</code>-script called <code>prepare_data.py</code> with content similar to</p>
+<pre><code class="language-python">from argparse import ArgumentParser
 
+import cv2
+from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
+from core_data_utils.datasets.image import ImageDataset
+
+
+if __name__ == &quot;__main__&quot;:
+
+    cv2.setNumThreads(0)
+
+    parser = ArgumentParser()
+    parser.add_argument(&quot;--indir&quot;, type=str, required=True)
+    parser.add_argument(&quot;--outfile&quot;, type=str, required=True)
+
+    args = parser.parse_args()
+
+    # this will read all images in the directory 'args.indir' and store them in 'x'
+    x = ImageDataSet.from_directory(args.indir)
+
+    # write dataset 'x' to disk via pickle
+    x.to_pickle(args.outfile)
+</code></pre>
+<p>To call this script in our <code>nextflow</code> pipeline, define a <em>new process</em>
+in <code>pipeline.nf</code>:</p>
+<pre><code class="language-nextflow">process prepare_dataset{
+
+    label &quot;low_cpu&quot;, &quot;short_running&quot; // can be used to control the amount of resources allocated for process by SLURM
+
+    // define what inputs the process requires
+    input:
+    tuple val(basename), path(dataset_path)
+
+    // define what the process will output
+    output:
+    tuple val(basename), path(&quot;original_dataset.pickle&quot;), emit: results
+
+    /*
+    define what bash-script will be executed, in this case we simply call
+    our python script 'prepare_dataset.py' and suppy it with the
+    process's input arguments as 'command line arguments' (that's why we need
+    an ArgumentParser in the python script).
+    */
+    script:
+    &quot;&quot;&quot;
+    python ${projectDir}/scripts/prepare_dataset.py \
+        --indir=&quot;${dataset_path}&quot; \
+        --outfile=&quot;original_dataset.pickle&quot;
+    &quot;&quot;&quot;
+}
+</code></pre>
+<p>With this preliminary process in place we can define the full pipeline:</p>
+<pre><code class="language-nextflow">
+workflow {
+    // we create a queue-channel listing all dataset directories inside a common parent directory (params.parent_indir)
+    // params.parent_indir can be supplied either via a config file or directly be specified
+    input_datasets = Channel.fromPath(file(params.parent_indir).resolve(params.in_dir).toString(), type: &quot;dir&quot;)
+
+    // Transform the channel to emit both the directory and its basename
+    // This creates a tuple channel: [dir, basename]
+    input_datasets = input_datasets.map { dir -&gt;
+        def basename = dir.name
+        [basename, dir]
+    }
+
+    // prepare datasets:
+    prepare_dataset(input_datasets)
+
+    /* the output of prepare_datasets is the input for the nuclei_segmentation
+    in addition to the prepared dataset pickle file which is output by the previous process
+    we also need to specify:
+        1. the stardist probability threshold
+        2. minimum nucleus area (in px^2)
+        3. the directory to which the output should be published
+    */
+    nuclei_segmentation(prepare_dataset.out.results, 0.473, ...)
+
+    /* the output of the nuclei segmentation is then fed to the 'cell_approximation'
+    process: (for a more detailed documentation of the input parameters the processes expect see
+    the corresponding module documentation)
+    */
+    cell_approximation(nuclei_segmentation.out.results, cell_cutoff_px, parent_dir_out)
+}
+
+</code></pre>
+<h3 id="run-the-example-pipeline">Run the Example Pipeline</h3>
+<p>To run the pipeline, run the following command from the directory the <code>pipeline.nf</code>
+file resides in:</p>
+<pre><code class="language-bash">nextflow run ./pipeline.nf
+</code></pre>
+<p>[^1]: or another python distribution that comes with <code>conda</code> or <code>mamba</code>
+[^2]: This environment contains <strong>all</strong> module dependencies. Depending on which ones you are planning
+to use some dependencies might not be needed.</p>
 
 
 
