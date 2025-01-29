@@ -123,11 +123,16 @@ class MergeCellNucleiInformation(BaseMultiDataSetTransformation):
 
 class IdentifyNeighborsTransformation(BaseMultiDataSetTransformation):
     def __init__(
-        self, mum_px: float, cutout_size: int = 30, dilation_size: int = 5
+        self,
+        mum_px: float,
+        cutout_size: int = 30,
+        dilation_size: int = 5,
+        iterations: int = 2,
     ) -> None:
         self._mum_per_px = mum_px
         self._cutout_size = cutout_size
         self._dilation_size = dilation_size
+        self._dilate_iterations = iterations
 
         super().__init__()
 
@@ -178,6 +183,7 @@ class IdentifyNeighborsTransformation(BaseMultiDataSetTransformation):
                     cv2.getStructuringElement(
                         cv2.MORPH_RECT, (self._dilation_size, self._dilation_size)
                     ),
+                    iterations=self._dilate_iterations,
                 )
 
                 overlaps = np.setdiff1d(
