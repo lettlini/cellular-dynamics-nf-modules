@@ -62,7 +62,7 @@ cell motility measure $D_\text{min}^2$. This measure quantifies non-affine
 movements of cells with regard to their neighbors by optimizing the
 strain tensor $\pmb{E}$:
 
-$D^2_{\text{min}, i} = \text{min} \left[\frac{1}{N} \sum_{j \in \mathcal{N}_i} \left(\pmb{r}_{i,j}(t+T) - \pmb{E}_i \pmb{r}_{i,j}(t) \right) \right]$
+$D^2_{\text{min}, i} = \text{min} \left[\frac{1}{N} \sum_{j \in \mathcal{N}_i} \left(\pmb{r}_{i,j}(t+T) - \pmb{E}_i \pmb{r}_{i,j}(t) \right)^2 \right]$
 
 Import the module into your pipeline script via
 
