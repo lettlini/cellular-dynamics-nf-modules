@@ -8,7 +8,7 @@ process concatenate_tracking_dataframes {
     val parent_dir_out
 
     output:
-    path "all_cell_tracks.ipc"
+    path "all_cell_tracks.ipc", emit: results
 
     script:
     """
