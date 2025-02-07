@@ -15,7 +15,7 @@ process basic_filter {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/basic_filter/scripts/filter.py \
+	 python ${moduleDir}/scripts/filter.py \
         --infile="${dataset_path}" \
         --outfile="confluency_filtered.pickle" \
         --drop_first_n=${drop_first_n} \

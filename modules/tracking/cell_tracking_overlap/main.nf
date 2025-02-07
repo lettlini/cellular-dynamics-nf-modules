@@ -10,7 +10,7 @@ process cell_tracking_overlap {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/cell_tracking_overlap/scripts/track_cells.py \
+	 python ${moduleDir}/scripts/track_cells.py \
         --cell_label_file=${cell_approximation_fpath} \
         --abstract_structure_file=${abstract_structure_fpath} \
         --outfile="tracked_abstract_structure.pickle" \

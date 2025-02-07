@@ -12,7 +12,7 @@ process cell_approximation {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/cell_approximation/scripts/cell_approximation.py \
+	 python ${moduleDir}/scripts/cell_approximation.py \
         --infile="${fpath}" \
         --outfile="cell_approximation.pickle" \
         --cell_cutoff_px=${cell_cutoff_px} \

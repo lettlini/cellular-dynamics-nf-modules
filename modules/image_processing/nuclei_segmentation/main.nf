@@ -15,7 +15,7 @@ process nuclei_segmentation {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/nuclei_segmentation/scripts/nuclei_segmentation.py \
+	 python ${moduleDir}/scripts/nuclei_segmentation.py \
         --infile="${fpath}" \
         --outfile="nuclei_segmentation.pickle" \
         --stardist_probility_threshold=${stardist_probability_threshold} \

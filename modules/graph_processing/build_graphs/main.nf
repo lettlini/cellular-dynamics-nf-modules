@@ -11,7 +11,7 @@ process build_graphs {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/build_graphs/scripts/build_graphs.py \
+	 python ${moduleDir}/scripts/build_graphs.py \
         --infile=${abstract_structure_fpath} \
         --mum_per_px=${mum_per_px} \
         --outfile="graph_dataset.pickle" \

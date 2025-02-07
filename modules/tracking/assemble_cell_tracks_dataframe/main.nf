@@ -15,7 +15,7 @@ process assemble_cell_track_dataframe {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/assemble_cell_tracks_dataframe/scripts/assemble_tracking_df.py \
+	 python ${moduleDir}/scripts/assemble_tracking_df.py \
         --infile=${graph_dataset_fpath} \
         --outfile="cell_tracks.ipc" \
         --delta_t_minutes=${delta_t_minutes} \

@@ -12,7 +12,7 @@ process structure_abstraction {
     script:
     """
 
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/structure_abstraction/scripts/structure_abstraction.py \
+	 python ${moduleDir}/scripts/structure_abstraction.py \
         --nuclei_infile="${nuclei_fpath}" \
         --cells_infile="${cell_fpath}" \
         --mum_per_px=${mum_per_px} \

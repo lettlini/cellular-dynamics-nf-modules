@@ -10,7 +10,7 @@ process calculate_local_density {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/graph_processing/calculate_local_density/scripts/calculate_local_density.py \
+	 python ${moduleDir}/scripts/calculate_local_density.py \
         --infile=${graph_dataset} \
         --outfile="graph_dataset_with_local_density.pickle" \
         --cpus=${task.cpus}

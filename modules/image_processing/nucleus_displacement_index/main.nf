@@ -10,7 +10,7 @@ process nucleus_displacement_index {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/nucleus_displacement_index/scripts/main.py \
+	 python ${moduleDir}/scripts/main.py \
         --labelled_cell_infile=${labelled_cells_ds} \
         --labelled_nuclei_infile=${labelled_nuclei_ds} \
         --graph_ds_infile=${graph_ds} \

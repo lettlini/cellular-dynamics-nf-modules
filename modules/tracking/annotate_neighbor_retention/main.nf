@@ -12,7 +12,7 @@ process annotate_neighbor_retention {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/annotate_neighbor_retention/scripts/annotate_neighbor_retention.py \
+	 python ${moduleDir}/scripts/annotate_neighbor_retention.py \
         --infile=${graph_dataset_fpath} \
         --outfile="neighbor_retention_graph_ds.pickle" \
         --delta_t_minutes=${delta_t_minutes} \

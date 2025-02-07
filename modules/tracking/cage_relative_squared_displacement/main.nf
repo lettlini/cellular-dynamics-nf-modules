@@ -14,7 +14,7 @@ process cage_relative_squared_displacement {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/tracking/cage_relative_squared_displacement/scripts/main.py \
+	 python ${moduleDir}/scripts/main.py \
             --infile=${graph_dataset_fpath} \
             --outfile="crsd_annotated_graphs.pickle" \
             --delta_t_minutes=${delta_t_minutes} \

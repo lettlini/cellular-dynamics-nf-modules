@@ -13,7 +13,7 @@ process label_objects {
 
     script:
     """
-    python ${projectDir}/cellular-dynamics-nf-modules/modules/image_processing/label_objects/scripts/label_objects.py \
+	 python ${moduleDir}/scripts/label_objects.py \
         --infile=${fpath} \
         --outfile="${objects_name}_labelled.pickle" \
         --cpus=${task.cpus}
