@@ -1,6 +1,8 @@
 process nucleus_displacement_index {
     label "high_cpu", "long_running"
 
+    conda "${moduleDir}/environment.yml" 
+
     input:
     tuple val(basename), path(labelled_nuclei_ds), path(labelled_cells_ds), path(graph_ds)
     val parent_dir_out

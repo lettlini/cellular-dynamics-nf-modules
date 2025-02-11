@@ -1,0 +1,11 @@
+name: nucleus_displacement_index
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - networkx
+    - numpy
+    - git+https://github.com/lettlini/core-data-utils
+    - git+https://github.com/lettlini/nucleus-displacement-index

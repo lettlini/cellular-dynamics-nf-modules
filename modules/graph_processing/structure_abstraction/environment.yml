@@ -1,0 +1,11 @@
+name: structure_abstraction
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - opencv-python
+    - tqdm
+    - numpy
+    - git+https://github.com/lettlini/core-data-utils

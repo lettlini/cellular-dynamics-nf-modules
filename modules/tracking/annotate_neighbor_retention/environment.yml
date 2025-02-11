@@ -1,0 +1,11 @@
+name: annotate_neighbor_retention
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - networkx
+    - tqdm
+    - numpy
+    - git+https://github.com/lettlini/core-data-utils

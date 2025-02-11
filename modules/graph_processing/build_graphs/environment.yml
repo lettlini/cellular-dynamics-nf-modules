@@ -1,0 +1,10 @@
+name: build_graphs
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - networkx
+    - numpy
+    - git+https://github.com/lettlini/core-data-utils

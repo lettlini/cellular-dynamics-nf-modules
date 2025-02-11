@@ -1,0 +1,12 @@
+name: annotate_D2min
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - tqdm
+    - numpy
+    - scipy
+    - networkx
+    - git+https://github.com/lettlini/core-data-utils

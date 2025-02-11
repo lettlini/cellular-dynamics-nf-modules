@@ -2,6 +2,8 @@ process cage_relative_squared_displacement {
 
     label "short_running", "low_cpu"
 
+    conda "${moduleDir}/environment.yml" 
+
     input:
     tuple val(basename), path(graph_dataset_fpath)
     val delta_t_minutes

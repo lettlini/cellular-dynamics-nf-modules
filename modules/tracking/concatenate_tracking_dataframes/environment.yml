@@ -1,0 +1,10 @@
+name: concatenate_tracking_dataframes
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - polars
+    - numpy
+    - git+https://github.com/lettlini/core-data-utils

@@ -1,0 +1,11 @@
+name: cage_relative_squared_displacement
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - networkx
+    - tqdm
+    - numpy
+    - git+https://github.com/lettlini/core-data-utils

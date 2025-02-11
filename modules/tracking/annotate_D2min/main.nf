@@ -3,6 +3,8 @@ process annotate_D2min {
 
     label "long_running", "low_cpu"
 
+    conda "${moduleDir}/environment.yml" 
+
     input:
     tuple val(basename), path(graph_dataset_fpath)
     val delta_t_minutes

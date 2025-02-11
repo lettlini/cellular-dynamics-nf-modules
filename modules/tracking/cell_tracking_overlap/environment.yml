@@ -1,0 +1,11 @@
+name: cell_tracking_overlap
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - git+https://github.com/lettlini/overlap-tracking
+    - git+https://github.com/lettlini/core-data-utils
+    - tqdm
+    - numpy
