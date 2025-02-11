@@ -3,7 +3,6 @@ from typing import Iterable
 
 import overlap_tracking
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
-from core_data_utils.transformations import BaseMultiDataSetTransformation
 from tqdm import trange
 
 

@@ -1,6 +1,8 @@
 process structure_abstraction {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(nuclei_fpath), path(cell_fpath)
     val mum_per_px

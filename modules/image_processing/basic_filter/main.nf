@@ -4,6 +4,8 @@ process basic_filter {
 
     label "low_cpu", "short_running"
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(dataset_path)
     val drop_first_n

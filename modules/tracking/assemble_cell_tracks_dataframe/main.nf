@@ -3,6 +3,8 @@ process assemble_cell_track_dataframe {
 
     label "short_running", "low_cpu"
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(graph_dataset_fpath)
     val delta_t_minutes

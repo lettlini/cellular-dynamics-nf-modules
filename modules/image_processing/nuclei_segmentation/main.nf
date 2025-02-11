@@ -4,6 +4,8 @@ process nuclei_segmentation {
     label "high_cpu", "long_running"
     maxForks 1
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(fpath)
     val stardist_probability_threshold

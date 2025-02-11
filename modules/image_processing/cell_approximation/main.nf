@@ -2,6 +2,8 @@ process cell_approximation {
 
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(fpath)
     val cell_cutoff_px

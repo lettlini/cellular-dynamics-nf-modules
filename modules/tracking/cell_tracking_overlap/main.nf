@@ -1,6 +1,8 @@
 process cell_tracking_overlap {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(cell_approximation_fpath), path(abstract_structure_fpath)
     val parent_dir_out

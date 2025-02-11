@@ -1,11 +1,10 @@
-name: .
+name: concatenate_tracking_dataframes
 channels:
   - conda-forge
 dependencies:
   - python=3.12
   - pip
   - pip:
-    - opencv-python
-    - tqdm
+    - polars
     - numpy<2
     - git+https://github.com/lettlini/core-data-utils

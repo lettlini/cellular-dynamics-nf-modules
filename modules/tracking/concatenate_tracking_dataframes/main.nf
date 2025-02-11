@@ -3,6 +3,8 @@ process concatenate_tracking_dataframes {
 
     label "single_threaded", "high_memory"
 
+    conda "./environment.yml" 
+
     input:
     val tracking_df_files_list
     val parent_dir_out

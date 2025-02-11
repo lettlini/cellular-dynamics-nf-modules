@@ -1,6 +1,8 @@
 process build_graphs {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
+    conda "./environment.yml" 
+
     input:
     tuple val(basename), path(abstract_structure_fpath)
     val mum_per_px
