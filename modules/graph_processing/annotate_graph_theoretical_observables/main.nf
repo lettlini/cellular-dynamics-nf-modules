@@ -3,7 +3,7 @@ process annotate_graph_theoretical_observables {
 
     label "high_cpu", "long_running"
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(graph_dataset_fpath)

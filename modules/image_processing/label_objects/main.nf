@@ -3,7 +3,7 @@ process label_objects {
 
     label "short_running"
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(fpath)

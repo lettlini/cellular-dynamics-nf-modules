@@ -4,7 +4,7 @@ process basic_filter {
 
     label "low_cpu", "short_running"
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(dataset_path)

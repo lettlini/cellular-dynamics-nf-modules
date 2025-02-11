@@ -1,7 +1,7 @@
 process structure_abstraction {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(nuclei_fpath), path(cell_fpath)

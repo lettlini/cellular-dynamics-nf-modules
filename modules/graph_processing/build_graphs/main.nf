@@ -1,7 +1,7 @@
 process build_graphs {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(abstract_structure_fpath)

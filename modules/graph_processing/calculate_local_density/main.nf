@@ -1,7 +1,7 @@
 process calculate_local_density {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(graph_dataset)

@@ -4,7 +4,7 @@ process nuclei_segmentation {
     label "high_cpu", "long_running"
     maxForks 1
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(fpath)

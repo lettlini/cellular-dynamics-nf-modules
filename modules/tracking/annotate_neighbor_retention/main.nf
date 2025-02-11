@@ -1,7 +1,7 @@
 process annotate_neighbor_retention {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
-    conda "./environment.yml" 
+    conda "${moduleDir}/environment.yml" 
 
     input:
     tuple val(basename), path(graph_dataset_fpath)
