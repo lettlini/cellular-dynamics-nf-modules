@@ -6,7 +6,7 @@ dependencies:
   - pip
   - pip:
     - opencv-python
-    - numpy<2
+    - numpy
     - stardist
     - tensorflow-cpu
     - git+https://github.com/lettlini/core-data-utils

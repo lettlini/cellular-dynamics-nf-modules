@@ -6,5 +6,5 @@ dependencies:
   - pip
   - pip:
     - polars
-    - numpy<2
+    - numpy
     - git+https://github.com/lettlini/core-data-utils

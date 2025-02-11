@@ -6,7 +6,7 @@ dependencies:
   - pip
   - pip:
     - tqdm
-    - numpy<2
+    - numpy
     - scipy
     - networkx
     - git+https://github.com/lettlini/core-data-utils

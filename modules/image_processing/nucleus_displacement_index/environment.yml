@@ -6,6 +6,6 @@ dependencies:
   - pip
   - pip:
     - networkx
-    - numpy<2
+    - numpy
     - git+https://github.com/lettlini/core-data-utils
     - git+https://github.com/lettlini/nucleus-displacement-index
