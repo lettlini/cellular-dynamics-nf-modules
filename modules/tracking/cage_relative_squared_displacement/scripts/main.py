@@ -93,7 +93,7 @@ class CageRelativeSquaredDisplacementTransformation:
         )
 
         if future_own_label is None:
-            return np.NaN
+            return np.nan
 
         future_own_position = np.array(
             (future_own_props["cell_centroid_x"], future_own_props["cell_centroid_y"])

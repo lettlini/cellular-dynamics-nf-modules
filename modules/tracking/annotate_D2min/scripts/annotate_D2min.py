@@ -77,7 +77,7 @@ class D2minAnnotationTransformation:
         )
 
         if future_own_label is None:
-            return np.NaN
+            return np.nan
 
         current_own_position = get_object_positions(
             graph_dataset, node_label, sindex=sindex
@@ -103,7 +103,7 @@ class D2minAnnotationTransformation:
                 )
 
         if len(neighbor_current_positions) <= self._minimum_neighbors:
-            return np.NaN
+            return np.nan
 
         neighbor_current_positions = np.vstack(neighbor_current_positions)
         neighbor_future_positions = np.vstack(neighbor_future_positions)

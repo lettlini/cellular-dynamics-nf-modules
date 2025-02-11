@@ -42,7 +42,7 @@ class NeighborRetentionTransformation:
     ) -> float:
 
         if sindex + lag_time_frames + 1 >= len(graph_ds):
-            return np.NaN
+            return np.nan
         if lag_time_frames == 0:
             return 1.0
 
@@ -54,11 +54,11 @@ class NeighborRetentionTransformation:
         )
 
         if future_own_label is None:
-            return np.NaN
+            return np.nan
 
         current_neighbors = get_neighbor_list(graph_ds[sindex].data, node_label)
         if len(current_neighbors) == 0:
-            return np.NaN
+            return np.nan
 
         # push neighbors forward
         future_current_neighbors = []
