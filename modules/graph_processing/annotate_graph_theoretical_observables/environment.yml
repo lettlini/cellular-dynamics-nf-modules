@@ -5,7 +5,7 @@ dependencies:
   - python=3.12
   - pip
   - pip:
-    - opencv-python
+    - networkx
     - tqdm
     - numpy
     - git+https://github.com/lettlini/core-data-utils
