@@ -2,7 +2,6 @@ process nuclei_segmentation {
     publishDir "${parent_dir_out}/${basename}", mode: 'copy'
 
     label "high_cpu", "long_running"
-    maxForks 1
 
     conda "${moduleDir}/environment.yml" 
 
