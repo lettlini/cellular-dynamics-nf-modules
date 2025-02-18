@@ -167,10 +167,14 @@ if __name__ == "__main__":
         "--outfile", required=True, type=str, help="Path to output file"
     )
     parser.add_argument(
-        "--cell_cutoff_px",
+        "--dataset_config",
         required=True,
-        type=float,
-        help="Maximum radius of individual cells",
+        type=str,
+    )
+    parser.add_argument(
+        "--parent_config",
+        required=True,
+        type=str,
     )
     parser.add_argument(
         "--cpus",
