@@ -182,11 +182,13 @@ if __name__ == "__main__":
     x = GrayScaleTransform()(x)
     x = MinMaxScaleTransform()(x)
 
+    min_nucleus_area_pxsq = full_config["data-preparation"][
+        "min_nucleus_area_mumsq"
+    ] / (full_config["experimental-parameters"]["mum_per_px"] ** 2)
+
     x = StarDistSegmentationTransform(
         prob_threshold=full_config["data-preparation"]["stardist_probality_threshold"]
     )(dataset=x)
-    x = RemoveSmallObjectsTransform(
-        full_config["data-preparation"]["min_nucleus_area_pxsq"]
-    )(dataset=x)
+    x = RemoveSmallObjectsTransform(min_nuc_area_px2=min_nucleus_area_pxsq)(dataset=x)
 
     x.to_pickle(args.outfile)
