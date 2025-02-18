@@ -1,6 +1,6 @@
 import multiprocessing as mp
 from argparse import ArgumentParser
-
+import toml
 import cv2
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
@@ -181,10 +181,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    full_config = toml.load([args.dataset_config, args.parent_config])
+
     x = BaseDataSet.from_pickle(args.infile)
 
-    x = CellApproximationTransformation(cell_cutoff_px=args.cell_cutoff_px)(
-        dataset=x, cpus=args.cpus
-    )
+    x = CellApproximationTransformation(
+        cell_cutoff_px=full_config["data-preparation"]["cell_cutoff_mum"]
+    )(dataset=x, cpus=args.cpus)
 
     x.to_pickle(args.outfile)
