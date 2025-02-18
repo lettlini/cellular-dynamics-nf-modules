@@ -1,14 +1,14 @@
 process label_objects {
-    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'copy'
 
     label "short_running"
 
-    conda "${moduleDir}/environment.yml" 
+    conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(fpath)
+    tuple val(basename), path(dataset_config), path(parent_config), path(fpath)
     val objects_name
-    val parent_dir_out
+    val publish_dir
 
     output:
     tuple val(basename), path("${objects_name}_labelled.pickle"), emit: results
