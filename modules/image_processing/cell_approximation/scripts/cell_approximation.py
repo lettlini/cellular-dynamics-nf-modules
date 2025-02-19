@@ -172,9 +172,9 @@ if __name__ == "__main__":
         type=str,
     )
     parser.add_argument(
-        "--parent_config",
+        "--cell_cutoff_mum",
         required=True,
-        type=str,
+        type=float,
     )
     parser.add_argument(
         "--cpus",
@@ -185,12 +185,16 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    full_config = toml.load([args.dataset_config, args.parent_config])
+    full_config = toml.load(args.dataset_config)
+
+    cell_cutoff_px = args.cell_cutoff_mum / (
+        full_config["experimental-parameters"]["mum_per_px"]
+    )
 
     x = BaseDataSet.from_pickle(args.infile)
 
-    x = CellApproximationTransformation(
-        cell_cutoff_px=full_config["data-preparation"]["cell_cutoff_mum"]
-    )(dataset=x, cpus=args.cpus)
+    x = CellApproximationTransformation(cell_cutoff_px=cell_cutoff_px)(
+        dataset=x, cpus=args.cpus
+    )
 
     x.to_pickle(args.outfile)

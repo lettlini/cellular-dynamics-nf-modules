@@ -5,11 +5,12 @@ process cell_approximation {
     conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(dataset_config), path(parent_config), path(fpath)
+    tuple val(basename), path(fpath), path(dataset_config)
+    val cell_cutoff_mum
     val publish_dir
 
     output:
-    tuple val(basename), path(dataset_config), path(parent_config), path("cell_approximation.pickle"), emit: results
+    tuple val(basename), path("cell_approximation.pickle"), path(dataset_config), emit: results
 
     script:
     """
@@ -17,7 +18,7 @@ process cell_approximation {
         --infile="${fpath}" \
         --outfile="cell_approximation.pickle" \
         --dataset_config=${dataset_config} \
-        --parent_config=${parent_config} \
+        --cell_cutoff_mum=${cell_cutoff_mum} \
         --cpus=${task.cpus}
     """
 }
