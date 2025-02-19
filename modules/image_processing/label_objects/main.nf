@@ -6,12 +6,12 @@ process label_objects {
     conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(dataset_config), path(parent_config), path(fpath)
+    tuple val(basename), path(fpath), path(dataset_config)
     val objects_name
     val publish_dir
 
     output:
-    tuple val(basename), path("${objects_name}_labelled.pickle"), emit: results
+    tuple val(basename), path("${objects_name}_labelled.pickle"), path(dataset_config), emit: results
 
     script:
     """
