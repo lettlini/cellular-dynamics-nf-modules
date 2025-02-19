@@ -163,9 +163,9 @@ if __name__ == "__main__":
         type=str,
     )
     parser.add_argument(
-        "--parent_config",
+        "--min_nucleus_area_mumsq",
         required=True,
-        type=str,
+        type=float,
     )
     parser.add_argument(
         "--cpus",
@@ -176,15 +176,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    full_config = toml.load([args.dataset_config, args.parent_config])
+    full_config = toml.load(args.dataset_config)
     x = BaseDataSet.from_pickle(args.infile)
 
     x = GrayScaleTransform()(x)
     x = MinMaxScaleTransform()(x)
 
-    min_nucleus_area_pxsq = full_config["data-preparation"][
-        "min_nucleus_area_mumsq"
-    ] / (full_config["experimental-parameters"]["mum_per_px"] ** 2)
+    min_nucleus_area_pxsq = args.min_nucleus_area_mumsq / (
+        full_config["experimental-parameters"]["mum_per_px"] ** 2
+    )
 
     x = StarDistSegmentationTransform(
         prob_threshold=full_config["data-preparation"]["stardist_probality_threshold"]

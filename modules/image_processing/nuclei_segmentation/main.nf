@@ -7,11 +7,12 @@ process nuclei_segmentation {
     conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(dataset_config), path(parent_config), path(fpath)
+    tuple val(basename), path(fpath), path(dataset_config)
+    val min_nucleus_area_mumsq
     val publish_dir
 
     output:
-    tuple val(basename), path(dataset_config), path(parent_config), path("nuclei_segmentation.pickle"), emit: results
+    tuple val(basename), path("nuclei_segmentation.pickle"), path(dataset_config), emit: results
 
     script:
     """
@@ -19,7 +20,7 @@ process nuclei_segmentation {
         --infile="${fpath}" \
         --outfile="nuclei_segmentation.pickle" \
         --dataset_config=${dataset_config} \
-        --parent_config=${parent_config} \
+        --min_nucleus_area_mumsq=${min_nucleus_area_mumsq} \
         --cpus=${task.cpus}
     """
 }
