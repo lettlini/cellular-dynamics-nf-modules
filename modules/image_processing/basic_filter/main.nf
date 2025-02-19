@@ -7,11 +7,11 @@ process basic_filter {
     conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(dataset_config), path(parent_config), path(dataset_path)
+    tuple val(basename), path(dataset_path), path(dataset_config)
     val publish_dir
 
     output:
-    tuple val(basename), path(dataset_config), path(parent_config), path("confluency_filtered.pickle"), emit: results
+    tuple val(basename), path("confluency_filtered.pickle"), path(dataset_config), emit: results
 
     script:
     """
@@ -19,7 +19,6 @@ process basic_filter {
         --infile="${dataset_path}" \
         --outfile="confluency_filtered.pickle" \
         --dataset_config="${dataset_config}" \
-        --parent_config="${parent_config}" \
         --cpus=${task.cpus}
     """
 }

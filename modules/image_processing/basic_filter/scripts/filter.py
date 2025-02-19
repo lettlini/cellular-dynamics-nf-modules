@@ -40,12 +40,6 @@ if __name__ == "__main__":
         help="Drop first n entries from DataSet",
     )
     parser.add_argument(
-        "--parent_config",
-        required=True,
-        type=str,
-        help="Drop last m entries from DataSet",
-    )
-    parser.add_argument(
         "--cpus",
         required=True,
         type=int,
@@ -55,13 +49,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dataset_config = toml.load(args.dataset_config)
-    parent_config = toml.load(args.parent_config)
-    full_config = parent_config | dataset_config
 
     x = BaseDataSet.from_pickle(args.infile)
     x = FirstLastFilter(
-        first_n=full_config["data-preparation"]["drop_first_n"],
-        last_m=full_config["data-preparation"]["drop_last_m"],
+        first_n=dataset_config["data-preparation"]["drop_first_n"],
+        last_m=dataset_config["data-preparation"]["drop_last_m"],
     )(x)
 
     x.to_pickle(args.outfile)
