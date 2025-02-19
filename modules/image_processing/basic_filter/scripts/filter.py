@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseFilter
+import toml
 
 
 class FirstLastFilter(BaseFilter):
@@ -33,16 +34,10 @@ if __name__ == "__main__":
         "--outfile", required=True, type=str, help="Path to output file"
     )
     parser.add_argument(
-        "--drop_first_n",
+        "--dataset_config",
         required=True,
-        type=int,
+        type=str,
         help="Drop first n entries from DataSet",
-    )
-    parser.add_argument(
-        "--drop_last_m",
-        required=True,
-        type=int,
-        help="Drop last m entries from DataSet",
     )
     parser.add_argument(
         "--cpus",
@@ -53,7 +48,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    dataset_config = toml.load(args.dataset_config)
+
     x = BaseDataSet.from_pickle(args.infile)
-    x = FirstLastFilter(first_n=args.drop_first_n, last_m=args.drop_last_m)(x)
+    x = FirstLastFilter(
+        first_n=dataset_config["data-preparation"]["drop_first_n"],
+        last_m=dataset_config["data-preparation"]["drop_last_m"],
+    )(x)
 
     x.to_pickle(args.outfile)

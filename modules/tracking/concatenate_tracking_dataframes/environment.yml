@@ -8,3 +8,4 @@ dependencies:
     - polars
     - numpy
     - git+https://github.com/lettlini/core-data-utils
+    - toml

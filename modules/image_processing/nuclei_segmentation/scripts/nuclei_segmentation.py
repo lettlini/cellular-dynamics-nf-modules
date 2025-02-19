@@ -1,6 +1,6 @@
 import os
 from argparse import ArgumentParser
-
+import toml
 import cv2
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
@@ -158,16 +158,14 @@ if __name__ == "__main__":
         "--outfile", required=True, type=str, help="Path to output file"
     )
     parser.add_argument(
-        "--stardist_probility_threshold",
+        "--dataset_config",
         required=True,
-        type=float,
-        help="Stardist probability threshold",
+        type=str,
     )
     parser.add_argument(
-        "--min_nucleus_area_pxsq",
+        "--min_nucleus_area_mumsq",
         required=True,
         type=float,
-        help="Nuclei smaller than 'min_nucleus_area_mumsq' will be removed",
     )
     parser.add_argument(
         "--cpus",
@@ -178,14 +176,19 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    full_config = toml.load(args.dataset_config)
     x = BaseDataSet.from_pickle(args.infile)
 
     x = GrayScaleTransform()(x)
     x = MinMaxScaleTransform()(x)
 
-    x = StarDistSegmentationTransform(prob_threshold=args.stardist_probility_threshold)(
-        dataset=x
+    min_nucleus_area_pxsq = args.min_nucleus_area_mumsq / (
+        full_config["experimental-parameters"]["mum_per_px"] ** 2
     )
-    x = RemoveSmallObjectsTransform(args.min_nucleus_area_pxsq)(dataset=x)
+
+    x = StarDistSegmentationTransform(
+        prob_threshold=full_config["data-preparation"]["stardist_probality_threshold"]
+    )(dataset=x)
+    x = RemoveSmallObjectsTransform(min_nuc_area_px2=min_nucleus_area_pxsq)(dataset=x)
 
     x.to_pickle(args.outfile)

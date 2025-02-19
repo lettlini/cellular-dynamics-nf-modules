@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 
 import networkx as nx
 import numpy as np
+import toml
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
 
@@ -183,10 +184,9 @@ if __name__ == "__main__":
         help="Path to input file.",
     )
     parser.add_argument(
-        "--mum_per_px",
+        "--dataset_config",
         required=True,
-        type=float,
-        help="Microns per px.",
+        type=str,
     )
     parser.add_argument(
         "--outfile",
@@ -203,8 +203,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    dataset_config = toml.load(args.dataset_config)
+    mum_per_px = dataset_config["experimental-parameters"]["mum_per_px"]
+
     x = BaseDataSet.from_pickle(args.infile)
-    x = BuildGraphTransform(args.mum_per_px)(x, cpus=args.cpus)
+    x = BuildGraphTransform(mum_px=mum_per_px)(x, cpus=args.cpus)
     x = CalculateCellNucleusShapeTransformation()(x, cpus=args.cpus)
     x = CalculateOrderParameter("cell_major_axis_angle_rad", "cell")(x, cpus=args.cpus)
     x = CalculateOrderParameter("nucleus_major_axis_angle_rad", "nucleus")(

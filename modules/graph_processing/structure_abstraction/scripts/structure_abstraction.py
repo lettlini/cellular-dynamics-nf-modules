@@ -4,6 +4,7 @@ from collections import defaultdict
 from typing import Any
 
 import cv2
+import toml
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import (
@@ -212,20 +213,18 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument(
-        "--nuclei_infile",
+        "--infile_nuclei",
         required=True,
         type=str,
         help="Absolute path to nuclei approximation dataset.",
     )
     parser.add_argument(
-        "--cells_infile",
+        "--infile_cells",
         required=True,
         type=str,
         help="Absolute path to cell approximation dataset.",
     )
-    parser.add_argument(
-        "--mum_per_px", required=True, type=float, help="Microns per px."
-    )
+    parser.add_argument("--dataset_config", required=True, type=str)
     parser.add_argument(
         "--outfile", required=True, type=str, help="Path to output file"
     )
@@ -238,15 +237,18 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    dataset_config = toml.load(args.dataset_config)
+    mum_per_px = dataset_config["experimental-parameters"]["mum_per_px"]
+
     cv2.setNumThreads(args.cpus)
 
-    cells_labelled_ds = BaseDataSet.from_pickle(args.cells_infile)
-    nuclei_labelled_ds = BaseDataSet.from_pickle(args.nuclei_infile)
+    cells_labelled_ds = BaseDataSet.from_pickle(args.infile_cells)
+    nuclei_labelled_ds = BaseDataSet.from_pickle(args.infile_nuclei)
 
-    cell_properties = ObjectInformationTransform(args.mum_per_px)(
+    cell_properties = ObjectInformationTransform(mum_per_px)(
         cells_labelled_ds, cpus=args.cpus
     )
-    nuclei_properties = ObjectInformationTransform(args.mum_per_px)(
+    nuclei_properties = ObjectInformationTransform(mum_per_px)(
         nuclei_labelled_ds, cpus=args.cpus
     )
 
@@ -260,7 +262,7 @@ if __name__ == "__main__":
     cv2.setNumThreads(0)
 
     all_properties_merged_neighbors = IdentifyNeighborsTransformation(
-        mum_px=args.mum_per_px
+        mum_px=mum_per_px
     )(
         merged_properties=all_properties_merged,
         cell_labels=cells_labelled_ds,

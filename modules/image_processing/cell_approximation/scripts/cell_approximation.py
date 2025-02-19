@@ -1,6 +1,6 @@
 import multiprocessing as mp
 from argparse import ArgumentParser
-
+import toml
 import cv2
 import numpy as np
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
@@ -167,10 +167,14 @@ if __name__ == "__main__":
         "--outfile", required=True, type=str, help="Path to output file"
     )
     parser.add_argument(
-        "--cell_cutoff_px",
+        "--dataset_config",
+        required=True,
+        type=str,
+    )
+    parser.add_argument(
+        "--cell_cutoff_mum",
         required=True,
         type=float,
-        help="Maximum radius of individual cells",
     )
     parser.add_argument(
         "--cpus",
@@ -181,9 +185,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    full_config = toml.load(args.dataset_config)
+
+    cell_cutoff_px = args.cell_cutoff_mum / (
+        full_config["experimental-parameters"]["mum_per_px"]
+    )
+
     x = BaseDataSet.from_pickle(args.infile)
 
-    x = CellApproximationTransformation(cell_cutoff_px=args.cell_cutoff_px)(
+    x = CellApproximationTransformation(cell_cutoff_px=cell_cutoff_px)(
         dataset=x, cpus=args.cpus
     )
 

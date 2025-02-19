@@ -10,3 +10,4 @@ dependencies:
     - scipy
     - networkx
     - git+https://github.com/lettlini/core-data-utils
+    - toml
