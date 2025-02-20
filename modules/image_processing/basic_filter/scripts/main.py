@@ -18,9 +18,15 @@ def get_time_window(dataset: BaseDataSet, min_area_frac: float) -> tuple[int, in
     area_fractions_smoothed = savgol_filter(area_fractions, 11, 3)
     area_fractions_valid = area_fractions_smoothed > min_area_frac
 
+    front_drop = find_first_true(area_fractions_valid)
+
+    back_drop = find_first_true(area_fractions_valid[::-1])
+    if back_drop is not None:
+        back_drop = len(dataset) - back_drop - 1
+
     return (
-        find_first_true(area_fractions_valid),
-        len(dataset) - find_first_true(area_fractions_valid[::-1]) - 1,
+        front_drop,
+        back_drop,
     )
 
 
