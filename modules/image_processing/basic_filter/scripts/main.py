@@ -2,6 +2,26 @@ from argparse import ArgumentParser
 
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseFilter
+import toml
+import numpy as np
+from scipy.signal import savgol_filter
+
+
+def find_first_true(arr):
+    if not arr.any():  # Check if any True exists
+        return None  # or raise Exception, depending on your needs
+    return np.argmax(arr)
+
+
+def get_time_window(dataset: BaseDataSet, min_area_frac: float) -> tuple[int, int]:
+    area_fractions = np.array([np.mean(entry.data > 0) for entry in dataset])
+    area_fractions_smoothed = savgol_filter(area_fractions, 11, 3)
+    area_fractions_valid = area_fractions_smoothed > min_area_frac
+
+    return (
+        find_first_true(area_fractions_valid),
+        len(dataset) - find_first_true(area_fractions_valid[::-1]) - 1,
+    )
 
 
 class FirstLastFilter(BaseFilter):
@@ -33,16 +53,10 @@ if __name__ == "__main__":
         "--outfile", required=True, type=str, help="Path to output file"
     )
     parser.add_argument(
-        "--drop_first_n",
+        "--dataset_config",
         required=True,
-        type=int,
+        type=str,
         help="Drop first n entries from DataSet",
-    )
-    parser.add_argument(
-        "--drop_last_m",
-        required=True,
-        type=int,
-        help="Drop last m entries from DataSet",
     )
     parser.add_argument(
         "--cpus",
@@ -53,7 +67,22 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    dataset_config = toml.load(args.dataset_config)
+
+    min_area_fraction = dataset_config["data-preparation"]["min_area_fraction"]
+
     x = BaseDataSet.from_pickle(args.infile)
-    x = FirstLastFilter(first_n=args.drop_first_n, last_m=args.drop_last_m)(x)
+
+    n, m = get_time_window(x, min_area_fraction)
+
+    assert m >= n, "invalid confluency time-window"
+
+    if (n is not None) and (m is not None):
+        if m - n > 0:
+            x = FirstLastFilter(first_n=n, last_m=m)(x)
+        else:
+            x = BaseDataSet()
+    else:
+        x = BaseDataSet()
 
     x.to_pickle(args.outfile)

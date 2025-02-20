@@ -8,3 +8,4 @@ dependencies:
     - opencv-python
     - numpy
     - git+https://github.com/lettlini/core-data-utils
+    - toml

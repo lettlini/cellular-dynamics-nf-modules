@@ -1,24 +1,22 @@
 process structure_abstraction {
-    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'copy'
 
-    conda "${moduleDir}/environment.yml" 
+    conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(nuclei_fpath), path(cell_fpath)
-    val mum_per_px
-    val parent_dir_out
+    tuple val(basename), path(nuclei_fpath), path(cell_fpath), path(dataset_config)
+    val publish_dir
 
     output:
-    tuple val(basename), path("abstract_structure.pickle"), emit: results
+    tuple val(basename), path("abstract_structure.pickle"), path(dataset_config), emit: results
 
     script:
     """
-
 	 python ${moduleDir}/scripts/structure_abstraction.py \
-        --nuclei_infile="${nuclei_fpath}" \
-        --cells_infile="${cell_fpath}" \
-        --mum_per_px=${mum_per_px} \
+        --infile_cells="${cell_fpath}" \
+        --infile_nuclei="${nuclei_fpath}" \
         --outfile="abstract_structure.pickle" \
+        --dataset_config="${dataset_config}" \
         --cpus=${task.cpus}
     """
 }

@@ -7,3 +7,5 @@ dependencies:
   - pip:
     - git+https://github.com/lettlini/core-data-utils
     - numpy
+    - scipy
+    - toml

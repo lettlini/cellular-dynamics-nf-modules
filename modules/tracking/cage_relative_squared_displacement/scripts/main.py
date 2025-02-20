@@ -5,6 +5,7 @@ import networkx as nx
 import numpy as np
 from core_data_utils.datasets import BaseDataSet
 from tqdm import trange
+import toml
 
 
 def get_object_positions(graph_ds, node_label, sindex, prefix="cell"):
@@ -166,18 +167,10 @@ if __name__ == "__main__":
         type=str,
         help="Comma separated list of lag times (in minutes)",
     )
-
     parser.add_argument(
-        "--delta_t_minutes",
+        "--dataset_config",
         required=True,
-        type=int,
-        help="Time difference between two adjacent frames.",
-    )
-    parser.add_argument(
-        "--mum_per_px",
-        required=True,
-        type=float,
-        help="Microns per pixel.",
+        type=str,
     )
     parser.add_argument(
         "--outfile",
@@ -193,15 +186,19 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+    dataset_config = toml.load(args.dataset_config)
+
+    delta_t_minutes = dataset_config["experimental-parameters"]["delta_t_minutes"]
+    mum_per_px = dataset_config["experimental-parameters"]["mum_per_px"]
 
     lag_times_minutes = [int(lt) for lt in args.lag_times_minutes.split(",")]
-    lag_times_frames = [lt // args.delta_t_minutes for lt in lag_times_minutes]
+    lag_times_frames = [lt // delta_t_minutes for lt in lag_times_minutes]
 
     x = BaseDataSet.from_pickle(args.infile)
 
     for lt_frames, lt_minutes in zip(lag_times_frames, lag_times_minutes, strict=True):
         x = CageRelativeSquaredDisplacementTransformation(
-            mum_per_px=args.mum_per_px,
+            mum_per_px=mum_per_px,
             lag_time_frames=lt_frames,
             property_suffix=f"{lt_minutes}_min",
         )(x)

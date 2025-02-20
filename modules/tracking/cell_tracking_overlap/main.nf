@@ -1,14 +1,14 @@
 process cell_tracking_overlap {
-    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'copy'
 
-    conda "${moduleDir}/environment.yml" 
+    conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(cell_approximation_fpath), path(abstract_structure_fpath)
-    val parent_dir_out
+    tuple val(basename), path(cell_approximation_fpath), path(abstract_structure_fpath), path(dataset_config)
+    val publish_dir
 
     output:
-    tuple val(basename), path("tracked_abstract_structure.pickle"), emit: results
+    tuple val(basename), path("tracked_abstract_structure.pickle"), path(dataset_config), emit: results
 
     script:
     """

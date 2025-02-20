@@ -1,14 +1,14 @@
 process calculate_local_density {
-    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'copy'
 
-    conda "${moduleDir}/environment.yml" 
+    conda "${moduleDir}/environment.yml"
 
     input:
-    tuple val(basename), path(graph_dataset)
-    val parent_dir_out
+    tuple val(basename), path(graph_dataset), path(dataset_config)
+    val publish_dir
 
     output:
-    tuple val(basename), path("graph_dataset_with_local_density.pickle"), emit: results
+    tuple val(basename), path("graph_dataset_with_local_density.pickle"), path(dataset_config), emit: results
 
     script:
     """

@@ -1,13 +1,13 @@
 process concatenate_tracking_dataframes {
-    publishDir "${parent_dir_out}", mode: 'copy'
+    publishDir "${publish_dir}", mode: 'copy'
 
     label "single_threaded", "high_memory"
 
-    conda "${moduleDir}/environment.yml" 
+    conda "${moduleDir}/environment.yml"
 
     input:
     val tracking_df_files_list
-    val parent_dir_out
+    val publish_dir
 
     output:
     path "all_cell_tracks.ipc", emit: results
@@ -15,9 +15,9 @@ process concatenate_tracking_dataframes {
     script:
     """
     echo '${tracking_df_files_list.join("\n")}' > file_list.txt
-	 python ${moduleDir}/scripts/main.py \
-        --infile='./file_list.txt' \
-        --outfile='all_cell_tracks.ipc' \
-        --cpus=${task.cpus}
+    python ${moduleDir}/scripts/main.py \
+    --infile='./file_list.txt' \
+    --outfile='all_cell_tracks.ipc' \
+    --cpus=${task.cpus}
     """
 }

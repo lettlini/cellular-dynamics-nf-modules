@@ -5,6 +5,7 @@ from typing import Iterable, Optional
 import polars as pl
 from core_data_utils.datasets import BaseDataSet
 from tqdm import trange
+import toml
 
 
 class CellTrackAssembler:
@@ -139,10 +140,9 @@ if __name__ == "__main__":
         help="Path to write tracking dataframe to.",
     )
     parser.add_argument(
-        "--delta_t_minutes",
+        "--dataset_config",
         required=True,
-        type=float,
-        help="Time between two adjacent frames (in minutes).",
+        type=str,
     )
 
     parser.add_argument("--exclude_attrs", type=str, required=True)
@@ -157,13 +157,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    dataset_config = toml.load(args.dataset_config)
+
     x = BaseDataSet.from_pickle(args.infile)
 
     exclude_attrs = args.exclude_attrs.split(",") if args.exclude_attrs != "" else None
     include_attrs = args.include_attrs.split(",") if args.include_attrs != "" else None
 
     cell_tracking_df = CellTrackAssembler(
-        args.delta_t_minutes,
+        dataset_config["experimental-parameters"]["delta_t_minutes"],
         include_attr=include_attrs,
         exclude_attr=exclude_attrs,
     )(x)
