@@ -77,6 +77,12 @@ if __name__ == "__main__":
 
     assert m >= n, "invalid confluency time-window"
 
-    x = FirstLastFilter(first_n=n, last_m=m)(x)
+    if (n is not None) and (m is not None):
+        if m - n > 0:
+            x = FirstLastFilter(first_n=n, last_m=m)(x)
+        else:
+            x = BaseDataSet()
+    else:
+        x = BaseDataSet()
 
     x.to_pickle(args.outfile)

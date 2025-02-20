@@ -8,10 +8,11 @@ process confluency_filter {
 
     input:
     tuple val(basename), path(dataset_path), path(dataset_config)
+    val object_filter
     val publish_dir
 
     output:
-    tuple val(basename), path("confluency_filtered.pickle"), path(dataset_config), emit: results
+    tuple val(basename), path("${object_filter}_confluency_filtered.pickle"), path(dataset_config), emit: results
 
     script:
     """
