@@ -1,4 +1,4 @@
-process basic_filter {
+process confluency_filter {
 
     publishDir "${publish_dir}/${basename}", mode: 'copy'
 
@@ -15,7 +15,7 @@ process basic_filter {
 
     script:
     """
-	 python ${moduleDir}/scripts/filter.py \
+	 python ${moduleDir}/scripts/main.py \
         --infile="${dataset_path}" \
         --outfile="confluency_filtered.pickle" \
         --dataset_config="${dataset_config}" \

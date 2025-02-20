@@ -3,6 +3,25 @@ from argparse import ArgumentParser
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseFilter
 import toml
+import numpy as np
+from scipy.signal import savgol_filter
+
+
+def find_first_true(arr):
+    if not arr.any():  # Check if any True exists
+        return None  # or raise Exception, depending on your needs
+    return np.argmax(arr)
+
+
+def get_time_window(dataset: BaseDataSet, min_area_frac: float) -> tuple[int, int]:
+    area_fractions = np.array([np.mean(entry.data > 0) for entry in dataset])
+    area_fractions_smoothed = savgol_filter(area_fractions, 11, 3)
+    area_fractions_valid = area_fractions_smoothed > min_area_frac
+
+    return (
+        find_first_true(area_fractions_valid),
+        len(dataset) - find_first_true(area_fractions_valid[::-1]) - 1,
+    )
 
 
 class FirstLastFilter(BaseFilter):
@@ -50,10 +69,14 @@ if __name__ == "__main__":
 
     dataset_config = toml.load(args.dataset_config)
 
+    min_area_fraction = dataset_config["data-preparation"]["min_area_fraction"]
+
     x = BaseDataSet.from_pickle(args.infile)
-    x = FirstLastFilter(
-        first_n=dataset_config["data-preparation"]["drop_first_n"],
-        last_m=dataset_config["data-preparation"]["drop_last_m"],
-    )(x)
+
+    n, m = get_time_window(x, min_area_fraction)
+
+    assert m >= n, "invalid confluency time-window"
+
+    x = FirstLastFilter(first_n=n, last_m=m)(x)
 
     x.to_pickle(args.outfile)
