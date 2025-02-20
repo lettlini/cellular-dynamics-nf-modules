@@ -18,7 +18,7 @@ process confluency_filter {
     """
 	 python ${moduleDir}/scripts/main.py \
         --infile="${dataset_path}" \
-        --outfile="confluency_filtered.pickle" \
+        --outfile="${object_filter}_confluency_filtered.pickle" \
         --dataset_config="${dataset_config}" \
         --cpus=${task.cpus}
     """
