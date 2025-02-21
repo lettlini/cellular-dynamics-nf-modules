@@ -119,7 +119,7 @@ class D2minAnnotationTransformation:
             tol=1e-3,
         )
         if not min_result.success:
-            raise RuntimeError("Minimize did not succeed.")
+            return np.nan
 
         D2min = min_result.fun.item() * (self._mum_per_px**2)
 
