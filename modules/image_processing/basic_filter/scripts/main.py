@@ -81,9 +81,9 @@ if __name__ == "__main__":
 
     n, m = get_time_window(x, min_area_fraction)
 
-    assert m >= n, "invalid confluency time-window"
-
     if (n is not None) and (m is not None):
+        assert m >= n, "invalid confluency time-window"
+
         if m - n > 0:
             x = FirstLastFilter(first_n=n, last_m=m)(x)
         else:
