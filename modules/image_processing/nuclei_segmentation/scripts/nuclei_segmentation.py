@@ -86,9 +86,11 @@ class StarDistSegmentationTransform(BaseDataSetTransformation):
     def __init__(
         self,
         prob_threshold: float | None = None,
+        num_tiles: int = 1,
     ):
         self._probability_threshold: float = prob_threshold
         self._stardist_model = StarDist2D.from_pretrained("2D_versatile_fluo")
+        self._num_tiles = num_tiles
 
         super().__init__()
 
@@ -98,7 +100,9 @@ class StarDistSegmentationTransform(BaseDataSetTransformation):
 
         image = entry.data
 
-        labels, info = self._stardist_model.predict_instances(image)
+        labels, info = self._stardist_model.predict_instances(
+            image, show_tile_progress=False, n_tiles=(self._num_tiles, self._num_tiles)
+        )
 
         # We need to disconnect touching labels:
         labels = get_disconnected(labels)
@@ -176,6 +180,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     full_config = toml.load(args.dataset_config)
+
+    stardist_tiles = full_config["data-preparation"]["stardist_tiles"]
+
     x = BaseDataSet.from_pickle(args.infile)
 
     x = GrayScaleTransform()(x)
@@ -186,7 +193,8 @@ if __name__ == "__main__":
     )
 
     x = StarDistSegmentationTransform(
-        prob_threshold=full_config["data-preparation"]["stardist_probality_threshold"]
+        prob_threshold=full_config["data-preparation"]["stardist_probality_threshold"],
+        num_tiles=stardist_tiles,
     )(dataset=x)
     x = RemoveSmallObjectsTransform(min_nuc_area_px2=min_nucleus_area_pxsq)(dataset=x)
 
