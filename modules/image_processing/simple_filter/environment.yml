@@ -1,0 +1,10 @@
+name: simple_filter
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - git+https://github.com/lettlini/core-data-utils
+    - numpy
+    - toml
