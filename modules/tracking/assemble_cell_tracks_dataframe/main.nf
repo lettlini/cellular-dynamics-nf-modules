@@ -1,5 +1,5 @@
 process assemble_cell_track_dataframe {
-    publishDir "${publish_dir}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'symlink'
 
     label "short_running", "low_cpu"
 

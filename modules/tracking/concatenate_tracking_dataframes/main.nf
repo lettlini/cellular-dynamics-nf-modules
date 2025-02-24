@@ -1,5 +1,5 @@
 process concatenate_tracking_dataframes {
-    publishDir "${publish_dir}", mode: 'copy'
+    publishDir "${publish_dir}", mode: 'symlink'
 
     label "single_threaded", "high_memory"
 

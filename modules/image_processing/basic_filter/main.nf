@@ -1,6 +1,6 @@
 process confluency_filter {
 
-    publishDir "${publish_dir}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'symlink'
 
     label "low_cpu", "short_running"
 

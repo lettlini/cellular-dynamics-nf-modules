@@ -1,5 +1,5 @@
 process annotate_D2min {
-    publishDir "${publish_dir}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'symlink'
 
     label "long_running", "low_cpu"
 

@@ -1,5 +1,5 @@
 process label_objects {
-    publishDir "${publish_dir}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'symlink'
 
     label "short_running"
 

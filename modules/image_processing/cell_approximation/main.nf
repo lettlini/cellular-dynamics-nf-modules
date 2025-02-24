@@ -1,6 +1,6 @@
 process cell_approximation {
 
-    publishDir "${publish_dir}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'symlink'
 
     conda "${moduleDir}/environment.yml"
 

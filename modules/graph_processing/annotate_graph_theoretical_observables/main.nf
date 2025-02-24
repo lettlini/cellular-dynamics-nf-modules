@@ -1,5 +1,5 @@
 process annotate_graph_theoretical_observables {
-    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
+    publishDir "${parent_dir_out}/${basename}", mode: 'symlink'
 
     label "high_cpu", "long_running"
 

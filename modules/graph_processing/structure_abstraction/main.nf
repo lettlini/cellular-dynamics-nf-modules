@@ -1,5 +1,5 @@
 process structure_abstraction {
-    publishDir "${publish_dir}/${basename}", mode: 'copy'
+    publishDir "${publish_dir}/${basename}", mode: 'symlink'
 
     conda "${moduleDir}/environment.yml"
 

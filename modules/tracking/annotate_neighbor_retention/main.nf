@@ -1,5 +1,5 @@
 process annotate_neighbor_retention {
-    publishDir "${parent_dir_out}/${basename}", mode: 'copy'
+    publishDir "${parent_dir_out}/${basename}", mode: 'symlink'
 
     conda "${moduleDir}/environment.yml" 
 
