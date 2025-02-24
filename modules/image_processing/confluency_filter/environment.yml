@@ -1,4 +1,4 @@
-name: basic_filter
+name: confluency_filter
 channels:
   - conda-forge
 dependencies:
