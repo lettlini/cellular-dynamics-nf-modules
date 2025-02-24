@@ -183,6 +183,12 @@ if __name__ == "__main__":
 
     stardist_tiles = full_config["data-preparation"]["stardist_tiles"]
 
+    stardist_thresh = None
+    if "stardist_probality_threshold":
+        stardist_thresh = full_config["data-preparation"][
+            "stardist_probality_threshold"
+        ]
+
     x = BaseDataSet.from_pickle(args.infile)
 
     x = GrayScaleTransform()(x)
@@ -193,7 +199,7 @@ if __name__ == "__main__":
     )
 
     x = StarDistSegmentationTransform(
-        prob_threshold=full_config["data-preparation"]["stardist_probality_threshold"],
+        prob_threshold=stardist_thresh,
         num_tiles=stardist_tiles,
     )(dataset=x)
     x = RemoveSmallObjectsTransform(min_nuc_area_px2=min_nucleus_area_pxsq)(dataset=x)
