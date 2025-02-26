@@ -4,8 +4,8 @@ from collections import defaultdict
 from typing import Any
 
 import cv2
-import toml
 import numpy as np
+import toml
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import (
     BaseDataSetTransformation,

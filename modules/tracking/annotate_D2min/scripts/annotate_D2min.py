@@ -4,10 +4,10 @@ from typing import Any, Optional
 
 import networkx as nx
 import numpy as np
+import toml
 from core_data_utils.datasets import BaseDataSet
 from scipy.optimize import minimize
 from tqdm import trange
-import toml
 
 
 def get_object_positions(graph_ds, node_label, sindex, prefix="cell"):

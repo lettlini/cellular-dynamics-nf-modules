@@ -1,9 +1,9 @@
 from argparse import ArgumentParser
 
+import numpy as np
+import toml
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseFilter
-import toml
-import numpy as np
 from scipy.signal import savgol_filter
 
 

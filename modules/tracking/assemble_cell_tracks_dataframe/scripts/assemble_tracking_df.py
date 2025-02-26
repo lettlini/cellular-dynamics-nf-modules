@@ -3,9 +3,9 @@ from collections import defaultdict
 from typing import Iterable, Optional
 
 import polars as pl
+import toml
 from core_data_utils.datasets import BaseDataSet
 from tqdm import trange
-import toml
 
 
 class CellTrackAssembler:
