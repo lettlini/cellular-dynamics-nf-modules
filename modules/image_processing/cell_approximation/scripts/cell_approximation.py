@@ -1,15 +1,24 @@
 import multiprocessing as mp
 from argparse import ArgumentParser
-import toml
+from typing import Optional
+
 import cv2
 import numpy as np
+import toml
 from core_data_utils.datasets import BaseDataSet, BaseDataSetEntry
 from core_data_utils.transformations import BaseDataSetTransformation
 
 
 class CellApproximationTransformation(BaseDataSetTransformation):
 
-    def __init__(self, cell_cutoff_px: int = None):
+    def __init__(self, cell_cutoff_px: Optional[int] = None):
+
+        if cell_cutoff_px is not None:
+            if cell_cutoff_px <= 0:
+                raise ValueError(
+                    "Provided value for 'cell_cutoff_px' ({cell_cutoff_px}) is invalid."
+                )
+
         self._cell_cutoff_px = cell_cutoff_px
 
         super().__init__()
@@ -187,9 +196,11 @@ if __name__ == "__main__":
 
     full_config = toml.load(args.dataset_config)
 
-    cell_cutoff_px = args.cell_cutoff_mum / (
-        full_config["experimental-parameters"]["mum_per_px"]
-    )
+    cell_cutoff_px = None
+    if args.cell_cutoff_mum > 0:
+        cell_cutoff_px = args.cell_cutoff_mum / (
+            full_config["experimental-parameters"]["mum_per_px"]
+        )
 
     x = BaseDataSet.from_pickle(args.infile)
 
