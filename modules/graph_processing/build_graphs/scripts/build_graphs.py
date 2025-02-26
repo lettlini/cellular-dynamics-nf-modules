@@ -84,13 +84,19 @@ class CalculateCellNucleusShapeTransformation(BaseDataSetTransformation):
         graph = entry.data
 
         for _, nodeprops in graph.nodes(data=True):
-            nodeprops["cell_shape"] = nodeprops["cell_perimeter_mum"] / np.sqrt(
-                nodeprops["cell_area_mum_squared"]
-            )
-            nodeprops["nucleus_shape"] = (
-                nodeprops["nucleus_major_axis_mum"]
-                / nodeprops["nucleus_minor_axis_mum"]
-            )
+
+            nodeprops["cell_shape"] = np.nan
+            if nodeprops["cell_area_mum_squared"] > 0:
+                nodeprops["cell_shape"] = nodeprops["cell_perimeter_mum"] / np.sqrt(
+                    nodeprops["cell_area_mum_squared"]
+                )
+
+            nodeprops["nucleus_shape"] = np.nan
+            if nodeprops["nucleus_minor_axis_mum"] > 0:
+                nodeprops["nucleus_shape"] = nodeprops["nucleus_shape"] = (
+                    nodeprops["nucleus_major_axis_mum"]
+                    / nodeprops["nucleus_minor_axis_mum"]
+                )
 
         return BaseDataSetEntry(identifier=entry.identifier, data=graph)
 
