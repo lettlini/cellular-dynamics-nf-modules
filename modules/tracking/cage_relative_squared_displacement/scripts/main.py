@@ -26,7 +26,7 @@ def get_future_node(
     if sindex + lag_time_frames + 1 >= len(graph_ds):
         return None, None
     if lag_time_frames == 0:
-        return node_label
+        return node_label, graph_ds[sindex].data.nodes[node_label]
 
     current_label = node_label
 
@@ -192,7 +192,7 @@ if __name__ == "__main__":
     mum_per_px = dataset_config["experimental-parameters"]["mum_per_px"]
 
     lag_times_minutes = [int(lt) for lt in args.lag_times_minutes.split(",")]
-    lag_times_frames = [lt // delta_t_minutes for lt in lag_times_minutes]
+    lag_times_frames = [int(lt / delta_t_minutes) for lt in lag_times_minutes]
 
     x = BaseDataSet.from_pickle(args.infile)
 

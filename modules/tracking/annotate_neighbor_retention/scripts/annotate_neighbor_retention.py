@@ -144,7 +144,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     lag_times_minutes = [int(lt) for lt in args.lag_times_minutes.split(",")]
-    lag_times_frames = [lt // args.delta_t_minutes for lt in lag_times_minutes]
+    lag_times_frames = [int(lt / args.delta_t_minutes) for lt in lag_times_minutes]
 
     x = BaseDataSet.from_pickle(args.infile)
 

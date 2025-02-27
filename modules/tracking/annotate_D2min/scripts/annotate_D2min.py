@@ -190,7 +190,7 @@ if __name__ == "__main__":
     mum_per_px = dataset_config["experimental-parameters"]["mum_per_px"]
 
     lag_times_minutes = [int(lt) for lt in args.lag_times_minutes.split(",")]
-    lag_times_frames = [lt // delta_t_minutes for lt in lag_times_minutes]
+    lag_times_frames = [int(lt / delta_t_minutes) for lt in lag_times_minutes]
 
     x = BaseDataSet.from_pickle(args.infile)
 
