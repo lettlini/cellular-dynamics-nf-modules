@@ -13,6 +13,10 @@ def concatenate_tracking_dataframes(file_paths: list[str]) -> pl.DataFrame:
             ds_path,
             memory_map=False,
         )
+
+        if len(current_df) == 0:
+            continue
+
         current_df = current_df.with_columns(
             (pl.col("track_id") + current_last_track_id).alias("track_id_unique")
         )

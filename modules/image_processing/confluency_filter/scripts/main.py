@@ -10,7 +10,7 @@ from scipy.signal import savgol_filter
 def find_first_true(arr):
     if not arr.any():  # Check if any True exists
         return None  # or raise Exception, depending on your needs
-    return np.argmax(arr)
+    return int(np.argmax(arr))
 
 
 def get_time_window(dataset: BaseDataSet, min_area_frac: float) -> tuple[int, int]:
@@ -28,26 +28,6 @@ def get_time_window(dataset: BaseDataSet, min_area_frac: float) -> tuple[int, in
         front_drop,
         back_drop,
     )
-
-
-class FirstLastFilter(BaseFilter):
-    def __init__(self, first_n: int, last_m: int) -> None:
-
-        # set filter parameters
-        self.first_n = first_n
-        self.last_m = last_m
-
-        super().__init__()
-
-    def _filter_decision_single_entry(
-        self, index: int, _: BaseDataSetEntry, **kwargs
-    ) -> bool:
-        if (index < self.first_n) or (index >= kwargs["dataset_length"] - self.last_m):
-            return False
-        return True
-
-    def _global_dataset_properties(self, dataset: BaseDataSet) -> dict:
-        return {"dataset_length": len(dataset)}
 
 
 if __name__ == "__main__":
@@ -85,7 +65,7 @@ if __name__ == "__main__":
         assert m >= n, "invalid confluency time-window"
 
         if m - n > 0:
-            x = FirstLastFilter(first_n=n, last_m=m)(x)
+            x = x[n : m + 1].copy()
         else:
             x = BaseDataSet()
     else:
