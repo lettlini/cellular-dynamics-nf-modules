@@ -162,6 +162,37 @@ class CellApproximationTransformation(BaseDataSetTransformation):
         )
 
 
+class RemoveSmallObjectsTransform(BaseDataSetTransformation):
+    def __init__(
+        self,
+        min_area_px2: float,
+    ) -> None:
+        self._min_area_px2 = min_area_px2
+
+        super().__init__()
+
+    def _transform_single_entry(
+        self, entry: BaseDataSetEntry, dataset_properties: dict
+    ) -> BaseDataSetEntry:
+
+        image = entry.data
+
+        image = (image > 0).astype(np.int8)
+
+        num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(image)
+
+        for component_idx in range(1, num_labels):
+            if stats[component_idx, cv2.CC_STAT_AREA] < self._min_area_px2:
+                labels[labels == component_idx] = 0
+
+        # convert label image to binary mask
+        labels = (labels > 0).astype(np.int8)
+
+        return BaseDataSetEntry(
+            identifier=entry.identifier, data=labels, metadata=entry.metadata
+        )
+
+
 if __name__ == "__main__":
 
     mp.set_start_method("spawn")
@@ -207,5 +238,12 @@ if __name__ == "__main__":
     x = CellApproximationTransformation(cell_cutoff_px=cell_cutoff_px)(
         dataset=x, cpus=args.cpus
     )
+
+    if "min_cell_size_mumsq" in full_config["data-preparation"]:
+        min_area_px2 = full_config["data-preparation"]["min_cell_size_mumsq"] / (
+            full_config["experimental-parameters"]["mum_per_px"] ** 2
+        )
+
+        x = RemoveSmallObjectsTransform(min_area_px2=min_area_px2)
 
     x.to_pickle(args.outfile)
