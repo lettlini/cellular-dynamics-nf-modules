@@ -79,6 +79,9 @@ class CellposeNucleiSegmentation(BaseDataSetTransformation):
 
         masks = get_disconnected(masks)
 
+        # make mask binary
+        masks = (masks > 0).astype(np.uint8)
+
         return BaseDataSetEntry(identifier=entry.identifier, data=masks, metadata=entry.metadata)
 
 class RemoveSmallObjectsTransform(BaseDataSetTransformation):
