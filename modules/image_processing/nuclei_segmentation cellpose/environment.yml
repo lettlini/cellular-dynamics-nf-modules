@@ -1,4 +1,4 @@
-name: nuclei_segmentation
+name: nuclei_segmentation_cellpose
 channels:
   - conda-forge
 dependencies:
