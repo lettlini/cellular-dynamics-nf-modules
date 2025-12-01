@@ -54,7 +54,7 @@ class ObjectInformationTransform(BaseDataSetTransformation):
             original_label = np.unique(image[labelim == contour2labelim]).item()
 
             perimeter = cv2.arcLength(contour, closed=True)
-            area = stats[contour2labelim, cv2.CC_STAT_AREA]
+            area = cv2.contourArea(contour)
 
             (_, (minor_axis, major_axis), angle) = cv2.fitEllipse(contour)
 
