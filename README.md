@@ -37,7 +37,3 @@ workflow {
     )
 }
 ```
-
-## Documentation
-
-Full documentation is available at [https://lettlini.github.io/cellular-dynamics-nf-modules/](https://lettlini.github.io/cellular-dynamics-nf-modules/)
